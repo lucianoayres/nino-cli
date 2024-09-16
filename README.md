@@ -80,7 +80,7 @@ After building the project and ensuring that the Ollama server is running, you c
 -   `-model` : The model to use (default: "llama3.1"). **This must match the model that is currently running on Ollama.**
 -   `-prompt` : The prompt to send to the language model (required)
 
-If no prompt is provided, the tool will exit with an error and provide usage instructions.
+If no prompt is provided, a default prompt will be sent.
 
 ### Example
 
