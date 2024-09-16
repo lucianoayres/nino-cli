@@ -89,9 +89,9 @@ If no prompt is provided, the tool will exit with an error and provide usage ins
 
 Gollama will print the model's response to the console as it receives streaming output by invoking the Ollama CLI.
 
-#### Save the Output to File
+#### Saving the Output to a File
 
-Optionally, you can save the output to a file:
+You can optionally save the model's output to a file with the following command:
 
 ```bash
 ./gollama -model llama3.1 -prompt "What is the capital of France?" | tee answer.txt
