@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -17,11 +18,28 @@ type Response struct {
 }
 
 func main() {
+	// Define the model argument with a default value and the prompt argument with a flag
+	modelPtr := flag.String("model", "llama3.1", "The model to use (default is llama3.1)")
+	promptPtr := flag.String("prompt", "Explain me LLMs like I'm five", "The prompt to send (required)")
+
+	// Parse the command-line flags
+	flag.Parse()
+
+	// Check if the prompt is provided
+	if *promptPtr == "" {
+		fmt.Println("Usage: query-ollama [-model model_name] -p \"prompt\"")
+		os.Exit(1)
+	}
+
+	model := *modelPtr
+	prompt := *promptPtr
 	url := "http://localhost:11434/api/generate"
-	data := `{
-		"model": "llama3.1",
-		"prompt": "Why is the sky blue? I want you to give a really short answer!"
-	}`
+
+	// Construct the JSON data with the model and prompt arguments
+	data := fmt.Sprintf(`{
+		"model": "%s",
+		"prompt": "%s"
+	}`, model, prompt)
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(data)))
 	if err != nil {
