@@ -79,8 +79,6 @@ After building the project and ensuring that the Ollama server is running, you c
 -   `-prompt` : The prompt to send to the language model (required)
 -   `-url` : The host and port where the Ollama server is running (optional) **The default `localhost:11434` will be used if no url is passed.**
 
-If no prompt is provided, a default prompt will be sent.
-
 ### Example
 
 ```bash
