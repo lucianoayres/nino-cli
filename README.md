@@ -30,7 +30,7 @@ Follow the instructions on the [Ollama GitHub repository](https://github.com/jmo
 
 Once Ollama is installed, you need to start the server:
 
-1. **Start the Ollama Server**: This command will run the Ollama server on `http://localhost:11434` (default url and port).
+1. **Start the Ollama Server**: This command will run the Ollama server on `http://localhost:11434/api/generate` (default url and port).
 
     ```bash
     ollama serve
@@ -80,13 +80,13 @@ After building the project and ensuring that the Ollama server is running, you c
 -   -   **This must match the model that is currently running on Ollama.**
 -   `-prompt` : The prompt to send to the language model (required)
 -   `-url` : The host and port where the Ollama server is running (optional)
--   -   **The default `http://localhost:11434` will be used if no url is passed.**
+-   -   **The default `http://localhost:11434/api/generate` will be used if no url is passed.**
 -   `-output` : Specifies the filename where the model output will be saved (optional)
 
 ### Example
 
 ```bash
-./gollama -model llama3.1 -prompt "What is the capital of France?" -url http://localhost:55555 -output result.txt
+./gollama -model llama3.1 -prompt "What is the capital of France?" -url http://localhost:55555/api/generate -output result.txt
 ```
 
 ### Output

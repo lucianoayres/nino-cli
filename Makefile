@@ -31,7 +31,7 @@ coverage:
 clean:
 	@echo "Cleaning up binaries and coverage reports..."
 	rm -f $(BINARY_NAME)
-	(cd ./$(TEST_DIR) && ls -la && rm -f coverage.out coverage.html)
+	(cd ./$(TEST_DIR) && rm -f coverage.out coverage.html)
 	@echo "Cleanup complete."
 
 # Clean only coverage files
