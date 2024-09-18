@@ -71,7 +71,7 @@ Ollama should now be running, and Gollama can interact with it by sending prompt
 After building the project and ensuring that the Ollama server is running, you can run Gollama with the following commands:
 
 ```bash
-./gollama -model "llama3.1" -prompt "Explain LLMs like I'm five"
+./gollama -model llama3.1 -prompt "Explain LLMs like I'm five"
 ```
 
 ### Command-line Flags:
