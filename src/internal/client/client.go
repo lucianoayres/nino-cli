@@ -1,47 +1,49 @@
-// File: internal/client/client.go
-
+// client/client.go
 package client
 
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"gollama/internal/models"
 )
 
-// HTTPClient implements the Client interface using the net/http package
+// HTTPClient represents a client for making HTTP requests.
 type HTTPClient struct {
-    httpClient *http.Client
-    url        string
+	BaseURL    string
+	HTTPClient *http.Client
 }
 
-// NewHTTPClient creates a new instance of HTTPClient
-func NewHTTPClient(url string) *HTTPClient {
-    return &HTTPClient{
-        httpClient: &http.Client{Timeout: 0}, // No timeout
-        url:        url,
-    }
+// NewHTTPClient creates a new HTTPClient with the given base URL.
+func NewHTTPClient(baseURL string) *HTTPClient {
+	return &HTTPClient{
+		BaseURL: baseURL,
+		HTTPClient: &http.Client{
+			Timeout: 0, // No timeout for streaming
+		},
+	}
 }
 
-// SendRequest sends an HTTP POST request with the given payload
+// SendRequest sends a POST request with the given payload and returns the HTTP response.
 func (c *HTTPClient) SendRequest(payload models.RequestPayload) (*http.Response, error) {
-    data, err := json.Marshal(payload)
-    if err != nil {
-        return nil, fmt.Errorf("failed to marshal request payload: %v", err)
-    }
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
 
-    req, err := http.NewRequest("POST", c.url, bytes.NewBuffer(data))
-    if err != nil {
-        return nil, fmt.Errorf("failed to create request: %v", err)
-    }
-    req.Header.Set("Content-Type", "application/json")
+	req, err := http.NewRequest("POST", c.BaseURL, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return nil, err
+	}
 
-    resp, err := c.httpClient.Do(req)
-    if err != nil {
-        return nil, fmt.Errorf("failed to send request: %v", err)
-    }
+	req.Header.Set("Content-Type", "application/json")
 
-    return resp, nil
+	// Send the request
+	resp, err := c.HTTPClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

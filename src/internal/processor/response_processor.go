@@ -1,3 +1,4 @@
+// processor/processor.go
 package processor
 
 import (
@@ -9,22 +10,27 @@ import (
 )
 
 // ProcessResponse reads and processes the response from the server
-func ProcessResponse(body io.Reader) error {
-    decoder := json.NewDecoder(body)
+// It writes the response to the provided writer without altering the original formatting.
+func ProcessResponse(body io.Reader, writer io.Writer) error {
+	decoder := json.NewDecoder(body)
 
-    for {
-        var r models.ResponsePayload
-        if err := decoder.Decode(&r); err == io.EOF {
-            break
-        } else if err != nil {
-            return fmt.Errorf("failed to decode JSON response: %v", err)
-        }
+	for {
+		var r models.ResponsePayload
+		if err := decoder.Decode(&r); err == io.EOF {
+			break
+		} else if err != nil {
+			return fmt.Errorf("failed to decode JSON response: %v", err)
+		}
 
-        fmt.Print(r.Response)
+		if r.Response == "" {
+			continue // Skip empty responses
+		}
 
-        if r.Done {
-            break
-        }
-    }
-    return nil
+		fmt.Fprint(writer, r.Response)
+
+		if r.Done {
+			break
+		}
+	}
+	return nil
 }

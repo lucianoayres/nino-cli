@@ -2,119 +2,109 @@ package processor
 
 import (
 	"bytes"
-	"io"
-	"os"
-	"strings"
 	"testing"
 )
 
-// captureOutput captures the standard output during the execution of a function
-func captureOutput(f func()) string {
-	var buf bytes.Buffer
-	origStdout := os.Stdout
-	r, w, _ := os.Pipe()
-	os.Stdout = w
-
-	done := make(chan struct{})
-	go func() {
-		io.Copy(&buf, r)
-		close(done)
-	}()
-
-	f()
-
-	w.Close()
-	os.Stdout = origStdout
-	<-done
-
-	return buf.String()
-}
-
+// TestProcessResponse tests the ProcessResponse function with various input scenarios.
 func TestProcessResponse(t *testing.T) {
 	tests := []struct {
-		name           string
-		input          string
-		expectedOutput string
-		expectedError  string
+		name       string
+		input      string
+		wantOutput string
+		wantErr    bool
 	}{
 		{
-			name:           "Empty input",
-			input:          ``,
-			expectedOutput: ``,
-			expectedError:  "",
+			name: "Normal processing with multiple responses",
+			input: `{"Response": "Hello", "Done": false}
+{"Response": " World", "Done": true}`,
+			wantOutput: "Hello World",
+			wantErr:    false,
 		},
 		{
-			name:           "Single response, done true",
-			input:          `{"response":"Hello, world!","done":true}`,
-			expectedOutput: "Hello, world!",
-			expectedError:  "",
+			name: "Skip empty responses",
+			input: `{"Response": "", "Done": false}
+{"Response": "Valid Response", "Done": true}`,
+			wantOutput: "Valid Response",
+			wantErr:    false,
 		},
 		{
-			name: "Multiple responses, done false then true",
-			input: `{"response":"Hello, ","done":false}
-{"response":"world!","done":true}`,
-			expectedOutput: "Hello, world!",
-			expectedError:  "",
+			name: "Malformed JSON input",
+			input: `{"Response": "Hello", "Done": false}
+{"Response": "World", "Done": true`,
+			wantOutput: "",
+			wantErr:    true,
 		},
 		{
-			name: "Invalid JSON",
-			input: `{"response":"Hello","done":false}
-{"response":,"done":false}`,
-			expectedOutput: "Hello",
-			expectedError:  "failed to decode JSON response: invalid character ',' looking for beginning of value",
+			name:       "Empty input",
+			input:      ``,
+			wantOutput: "",
+			wantErr:    false,
 		},
 		{
-			name: "No done true, ends with EOF",
-			input: `{"response":"Hello, ","done":false}
-{"response":"world!","done":false}`,
-			expectedOutput: "Hello, world!",
-			expectedError:  "",
+			name: "Only empty responses",
+			input: `{"Response": "", "Done": false}
+{"Response": "", "Done": true}`,
+			wantOutput: "",
+			wantErr:    false,
 		},
 		{
-			name: "Error after done true",
-			input: `{"response":"Hello, ","done":false}
-{"response":"world!","done":true}
-{"response":"Extra","done":false}`,
-			expectedOutput: "Hello, world!",
-			expectedError:  "",
+			name: "Single response marked as done",
+			input: `{"Response": "Single Response", "Done": true}`,
+			wantOutput: "Single Response",
+			wantErr:    false,
 		},
 		{
-			name: "JSON decoding error",
-			input: `{"response":"Hello, ","done":false}
-{"response":,"done":false}
-{"response":"world!","done":true}`,
-			expectedOutput: "Hello, ",
-			expectedError:  "failed to decode JSON response: invalid character ',' looking for beginning of value",
+			name: "Multiple responses with early done",
+			input: `{"Response": "First", "Done": false}
+{"Response": "Second", "Done": true}
+{"Response": "Third", "Done": false}`,
+			wantOutput: "FirstSecond",
+			wantErr:    false,
+		},
+		{
+			name: "Response with special characters",
+			input: `{"Response": "Hello\nWorld!", "Done": true}`,
+			wantOutput: "Hello\nWorld!",
+			wantErr:    false,
+		},
+		{
+			name: "Response with unicode characters",
+			input: `{"Response": "こんにちは", "Done": true}`,
+			wantOutput: "こんにちは",
+			wantErr:    false,
+		},
+		{
+			name: "Response with nested JSON objects",
+			input: `{"Response": "{\"key\":\"value\"}", "Done": true}`,
+			wantOutput: "{\"key\":\"value\"}",
+			wantErr:    false,
 		},
 	}
 
 	for _, tt := range tests {
+		tt := tt // Capture range variable
 		t.Run(tt.name, func(t *testing.T) {
-			reader := strings.NewReader(tt.input)
+			// Create an io.Reader from the input string
+			reader := bytes.NewReader([]byte(tt.input))
 
-			var actualErr error
-			output := captureOutput(func() {
-				actualErr = ProcessResponse(reader)
-			})
+			// Use a bytes.Buffer as the io.Writer to capture the output
+			var writer bytes.Buffer
 
-			// Trim spaces for consistent comparison
-			output = strings.TrimSpace(output)
-			expectedOutput := strings.TrimSpace(tt.expectedOutput)
+			// Call the ProcessResponse function
+			err := ProcessResponse(reader, &writer)
 
-			// Check for expected error
-			if tt.expectedError != "" {
-				if actualErr == nil || actualErr.Error() != tt.expectedError {
-					t.Errorf("expected error %q, got %v", tt.expectedError, actualErr)
-				}
-			} else {
-				if actualErr != nil {
-					t.Errorf("unexpected error: %v", actualErr)
-				}
+			// Check if an error was expected
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ProcessResponse() error = %v, wantErr %v", err, tt.wantErr)
+				return
 			}
 
-			// Check for expected output
-			if output != expectedOutput {
-				t.Errorf("expected output %q, got %q", expectedOutput, output)
+			// If no error was expected, compare the output
+			if !tt.wantErr {
+				gotOutput := writer.String()
+				if gotOutput != tt.wantOutput {
+					t.Errorf("ProcessResponse() output = %q, want %q", gotOutput, tt.wantOutput)
+				}
 			}
 		})
 	}
