@@ -2,33 +2,45 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gollama/internal/client"
-	"gollama/internal/config"
 	"gollama/internal/models"
 	"gollama/internal/processor"
 )
 
 func main() {
-	// Parse command-line arguments
-	cfg, err := config.ParseArgs()
-	if err != nil {
-		log.Fatalf("Error: %v", err)
+	// Define command-line flags
+	model := flag.String("model", "llama3.1", "The model to use")
+	prompt := flag.String("prompt", "", "The prompt to send to the language model")
+	url := flag.String("url", "http://localhost:11434/api/generate", "The host and port where the Ollama server is running")
+	output := flag.String("output", "", "Specifies the filename where the model output will be saved")
+	flag.Parse()
+
+	// If prompt is empty, check for positional arguments
+	if *prompt == "" {
+		args := flag.Args()
+		if len(args) == 0 {
+			fmt.Println("Error: No prompt provided. Use -prompt flag or provide prompt as positional arguments.")
+			os.Exit(1)
+		}
+		*prompt = strings.Join(args, " ")
 	}
 
 	// Initialize the HTTP client
-	cli := client.NewHTTPClient(cfg.URL)
+	cli := client.NewHTTPClient(*url)
 
 	// Prepare the request payload
 	payload := models.RequestPayload{
-		Model:  cfg.Model,
-		Prompt: cfg.Prompt,
+		Model:  *model,
+		Prompt: *prompt,
 	}
 
 	// Send the HTTP request
@@ -48,18 +60,18 @@ func main() {
 	writers := []io.Writer{os.Stdout} // Always write to console
 
 	// If Output is specified, add the file to writers
-	if cfg.Output != "" {
+	if *output != "" {
 		// Validate the output directory exists
-		dir := filepath.Dir(cfg.Output)
+		dir := filepath.Dir(*output)
 		if dir != "." { // Skip if current directory
 			if _, err := os.Stat(dir); os.IsNotExist(err) {
 				log.Fatalf("Error: Directory '%s' does not exist.", dir)
 			}
 		}
 
-		file, err := os.Create(cfg.Output)
+		file, err := os.Create(*output)
 		if err != nil {
-			log.Fatalf("Error creating output file '%s': %v", cfg.Output, err)
+			log.Fatalf("Error creating output file '%s': %v", *output, err)
 		}
 		defer file.Close()
 		writers = append(writers, file)
@@ -74,7 +86,7 @@ func main() {
 	}
 
 	// If output was saved to a file, notify the user
-	if cfg.Output != "" {
-		fmt.Printf("\nOutput saved to %s\n", cfg.Output)
+	if *output != "" {
+		fmt.Printf("\nOutput saved to %s\n", *output)
 	}
 }

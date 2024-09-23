@@ -66,12 +66,28 @@ Ollama should now be running, and Gollama can interact with it by sending prompt
     make build
     ```
 
-## Usage
+## Usage Examples
 
 After building the project and ensuring that the Ollama server is running, you can run Gollama with the following commands:
 
+### Using Default Model and URL:
+
+You can use Ollama with just a prompt as the only argument. By default, it will use the `llama3.1` model and connect to the default URL and port for the local Ollama server:
+
 ```bash
-./gollama -model llama3.1 -prompt "Explain LLMs like I'm five"
+./gollama Who said the quote, 'A person who never made a mistake never tried anything new'?
+```
+
+To prevent unintended line breaks or splitting of arguments in the shell, it's recommended to enclose the prompt in double quotes.
+
+```bash
+./gollama "What's the typical temperature range for a CPU while gaming?"
+```
+
+### Using `-model` and `-prompt` arguments:
+
+```bash
+./gollama -model llama3.1 -prompt "Which country has the most time zones?"
 ```
 
 ### Command-line Flags:
@@ -83,10 +99,12 @@ After building the project and ensuring that the Ollama server is running, you c
 -   -   **The default `http://localhost:11434/api/generate` will be used if no url is passed.**
 -   `-output` : Specifies the filename where the model output will be saved (optional)
 
-### Example
+### Using an Alternative Model
+
+This example uses all parameters with the `mistral` model. Ensure Ollama is running with `mistral`:
 
 ```bash
-./gollama -model llama3.1 -prompt "What is the capital of France?" -url http://localhost:55555/api/generate -output result.txt
+./gollama -model mistral -prompt "What is the capital of Australia?" -url http://localhost:55555/api/generate -output result.txt
 ```
 
 ### Output
