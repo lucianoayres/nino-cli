@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"gollama/internal/client"
 	"gollama/internal/models"
@@ -43,8 +44,15 @@ func main() {
 		Prompt: *prompt,
 	}
 
+	// Start the loading animation in a goroutine
+	done := make(chan bool)
+	go showLoadingAnimation(done)
+
 	// Send the HTTP request
 	response, err := cli.SendRequest(payload)
+
+	// Stop the loading animation
+	done <- true
 	if err != nil {
 		log.Fatalf("Error sending request: %v", err)
 	}
@@ -80,6 +88,9 @@ func main() {
 	// Create a MultiWriter to write to all destinations
 	multiWriter := io.MultiWriter(writers...)
 
+	// Clear the line before writing the response
+	fmt.Print("\r\033[K")
+
 	// Process the response and write to all writers
 	if err := processor.ProcessResponse(response.Body, multiWriter); err != nil {
 		log.Fatalf("Error processing response: %v", err)
@@ -92,4 +103,22 @@ func main() {
         // Add a newline for console output, so the shell prompt is displayed below
         fmt.Fprintln(os.Stdout)
     }
+}
+
+// showLoadingAnimation displays a loading animation in the console
+func showLoadingAnimation(done chan bool) {
+	animation := []rune{'|', '/', '-', '\\'}
+	i := 0
+	for {
+		select {
+		case <-done:
+			// Clear the animation line before stopping
+			fmt.Print("\r\033[K")
+			return
+		default:
+			fmt.Printf("\r%c Loading...", animation[i%len(animation)])
+			i++
+			time.Sleep(100 * time.Millisecond)
+		}
+	}
 }
