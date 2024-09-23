@@ -12,6 +12,11 @@ all: test build
 build:
 	go build -C $(BUILD_DIR) -o ../../../$(BINARY_NAME)
 
+# Update gollama version on the user local binary directory
+.PHONY: 
+update-local-bin:
+	sudo cp ./gollama /usr/local/bin/gollama
+
 # Run tests
 .PHONY: test
 test:
