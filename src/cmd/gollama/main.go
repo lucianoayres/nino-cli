@@ -88,5 +88,8 @@ func main() {
 	// If output was saved to a file, notify the user
 	if *output != "" {
 		fmt.Printf("\nOutput saved to %s\n", *output)
-	}
+	} else {
+        // Add a newline for console output, so the shell prompt is displayed below
+        fmt.Fprintln(os.Stdout)
+    }
 }

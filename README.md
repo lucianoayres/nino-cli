@@ -119,6 +119,10 @@ You can optionally save the model's output to a file with the following command:
 ./gollama -model llama3.1 -prompt "What's the japanese word for 'Thank you'?" -output answer.txt
 ```
 
+## Acknowledgements
+
+I would like to thank the developers of [Ollama](https://github.com/jmorganca/ollama) for providing the core tools that Gollama relies on. Additionally, a big thanks to the open-source community for creating the resources that made this project possible.
+
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
