@@ -1,9 +1,11 @@
-// main.go
 package main
 
 import (
 	"flag"
 	"fmt"
+	"gollama/internal/client"
+	"gollama/internal/models"
+	"gollama/internal/processor"
 	"io"
 	"log"
 	"net/http"
@@ -11,28 +13,36 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-
-	"gollama/internal/client"
-	"gollama/internal/models"
-	"gollama/internal/processor"
 )
 
 func main() {
 	// Define command-line flags
 	model := flag.String("model", "llama3.1", "The model to use")
 	prompt := flag.String("prompt", "", "The prompt to send to the language model")
+	promptFile := flag.String("prompt-file", "", "The path to a file containing the prompt to send to the language model")
 	url := flag.String("url", "http://localhost:11434/api/generate", "The host and port where the Ollama server is running")
 	output := flag.String("output", "", "Specifies the filename where the model output will be saved")
+
+	// Parse the flags
 	flag.Parse()
 
-	// If prompt is empty, check for positional arguments
-	if *prompt == "" {
+	// Check if the prompt is provided via -prompt or -prompt-file
+	if *prompt == "" && *promptFile == "" {
 		args := flag.Args()
 		if len(args) == 0 {
-			fmt.Println("Error: No prompt provided. Use -prompt flag or provide prompt as positional arguments.")
+			fmt.Println("Error: No prompt provided. Use -prompt, -prompt-file flag or provide prompt as positional arguments.")
 			os.Exit(1)
 		}
 		*prompt = strings.Join(args, " ")
+	}
+
+	// If the prompt-file is provided, read the file content
+	if *prompt == "" && *promptFile != "" {
+		content, err := os.ReadFile(*promptFile)
+		if err != nil {
+			log.Fatalf("Error reading prompt file '%s': %v", *promptFile, err)
+		}
+		*prompt = string(content)
 	}
 
 	// Initialize the HTTP client
