@@ -45,3 +45,11 @@ clean-coverage:
 	@echo "Cleaning up coverage reports..."
 	(cd ./$(TEST_DIR) && rm -f coverage.out coverage.html)
 	@echo "Coverage cleanup complete."
+
+# Set the local Git config to use the custom hooks directory
+.PHONY: setup-git-hooks
+setup-git-hooks:
+	@echo "Setting up git hooks..."
+	git config core.hooksPath git-hooks
+	chmod +x git-hooks/*
+	@echo "Git hooks have been configured successfully."
