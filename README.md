@@ -2,6 +2,8 @@
 
 ![gollama-banner-v1](https://github.com/user-attachments/assets/6dec07fd-2adb-4eb8-8e67-5b2d9445c209)
 
+[About](#about-gollama) · [Demo](#demo) · [Features](#features) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage Examples](#usage-examples) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile Usage](#makefile-usage)
+
 ## About Gollama
 
 Gollama is a Go-based command-line tool that simplifies interaction with local language models served by [Ollama](https://github.com/jmorganca/ollama). It allows you to send prompts to models, receive real-time streaming responses directly in your terminal, and configure models using straightforward command-line arguments.
@@ -117,6 +119,20 @@ You can optionally save the model's output to a file while still printing it to 
 ./gollama -model llama3.1 -prompt "What's the Japanese word for 'Thank you'?" -output answer.txt
 ```
 
+### Using Command Substitution
+
+You can dynamically generate input for gollama by using shell command substitution with the $(...) syntax. This allows the output of a shell command to be used as a prompt input:
+
+```bash
+./gollama "Analyze my project directory and suggest maintenance improvements: $(ls -la)"
+```
+
+Additionally, file content can be passed as input using shell redirection:
+
+```bash
+./gollama "Review the following project details and provide feedback:" < project.txt
+```
+
 ## Using Environment Variables
 
 You can set environment variables to use as defaults for the `-model` and `-url` parameters if they are not passed on the command line.
@@ -156,6 +172,103 @@ unset GOLLAMA_URL
 -   `-url` : The host and port where the Ollama server is running (optional).
     -   **The default `http://localhost:11434/api/generate` will be used if no URL is passed.**
 -   `-output` : Specifies the filename where the model output will be saved (optional).
+
+## Makefile Usage
+
+The `Makefile` in the Gollama project automates several key tasks like building, testing, and cleaning the project. Below are the available commands and their usage:
+
+### `make all`
+
+The default target, `all`, runs both the `test` and `build` commands to ensure that tests pass before building the project.
+
+```bash
+make all
+```
+
+-   **This command will:**
+    1. Run all unit tests (see `make test` for details).
+    2. Build the Gollama binary (see `make build` for details).
+
+### `make build`
+
+This target compiles the Gollama binary. The build process is performed in the `src/cmd/gollama` directory, and the output binary is placed at the root of the project directory.
+
+```bash
+make build
+```
+
+-   **This command will:**
+    1. Navigate to the `src/cmd/gollama` directory.
+    2. Compile the Go project and generate the `gollama` binary in the root directory.
+
+### `make update-local-bin`
+
+This command copies the freshly built `gollama` binary to `/usr/local/bin`, updating the system-wide version of the binary.
+
+```bash
+make update-local-bin
+```
+
+-   **Note:** This command requires `sudo` privileges, as it modifies the `/usr/local/bin` directory.
+
+### `make test`
+
+Runs all unit tests located in the `src` directory. This ensures that the project is functioning correctly.
+
+```bash
+make test
+```
+
+-   **This command will:**
+    1. Run the tests using Go's built-in test framework.
+    2. Output the results of each test case.
+
+### `make coverage`
+
+This target runs all tests and generates a code coverage report. The report is saved as `coverage.html` in the `src` directory, which can be viewed in a browser.
+
+```bash
+make coverage
+```
+
+-   **This command will:**
+    1. Run the tests and generate a coverage profile.
+    2. Create an HTML report of the test coverage at `src/coverage.html`.
+
+### `make clean`
+
+Cleans up the project by removing the built binary and any generated coverage reports.
+
+```bash
+make clean
+```
+
+-   **This command will:**
+    1. Delete the `gollama` binary from the root directory.
+    2. Remove the `coverage.out` and `coverage.html` files from the `src` directory.
+
+### `make clean-coverage`
+
+This target removes only the coverage report files, leaving the binary intact.
+
+```bash
+make clean-coverage
+```
+
+-   **This command will:**
+    1. Delete the `coverage.out` and `coverage.html` files from the `src` directory.
+
+### `make setup-git-hooks`
+
+Configures Git to use a custom hooks directory (`git-hooks`) for pre-commit or other Git hook scripts.
+
+```bash
+make setup-git-hooks
+```
+
+-   **This command will:**
+    1. Set the Git configuration to use the `git-hooks` directory.
+    2. Ensure that all hooks are executable by running `chmod +x` on the files inside `git-hooks`.
 
 ## Acknowledgements
 
