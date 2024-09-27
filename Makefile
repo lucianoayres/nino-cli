@@ -20,6 +20,7 @@ update-local-bin:
 # Run tests
 .PHONY: test
 test:
+	@echo "Running tests..."
 	go test -C $(TEST_DIR) ./...
 
 # Run tests with coverage
