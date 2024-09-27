@@ -16,11 +16,23 @@ import (
 )
 
 func main() {
+	// Check for the environment variable "GOLLAMA_MODEL"
+	defaultModel := os.Getenv("GOLLAMA_MODEL")
+	if defaultModel == "" {
+		defaultModel = "llama3.1" // Fallback default if the environment variable is not set
+	}
+
+    // Check for the environment variable "GOLLAMA_URL"
+	defaultURL := os.Getenv("GOLLAMA_URL")
+	if defaultURL == "" {
+		defaultURL = "http://localhost:11434/api/generate" // Fallback default if the environment variable is not set
+	}
+
 	// Define command-line flags
-	model := flag.String("model", "llama3.1", "The model to use")
+	model := flag.String("model", defaultModel, "The model to use")
 	prompt := flag.String("prompt", "", "The prompt to send to the language model")
 	promptFile := flag.String("prompt-file", "", "The path to a file containing the prompt to send to the language model")
-	url := flag.String("url", "http://localhost:11434/api/generate", "The host and port where the Ollama server is running")
+	url := flag.String("url", defaultURL, "The host and port where the Ollama server is running")
 	output := flag.String("output", "", "Specifies the filename where the model output will be saved")
 
 	// Parse the flags

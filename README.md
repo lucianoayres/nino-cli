@@ -73,7 +73,7 @@ After building the project and ensuring that the Ollama server is running, you c
 
 ### Using Default Model and URL:
 
-You can use Ollama with just a prompt as the only argument. By default, it will use the `llama3.1` model and connect to the default URL and port for the local Ollama server:
+You can use Gollama with just a prompt as the only argument. By default, it will use the `llama3.1` model and connect to the default URL and port for the local Ollama server:
 
 ```bash
 ./gollama "Who said the quote, 'A person who never made a mistake never tried anything new'?"
@@ -115,6 +115,35 @@ You can optionally save the model's output to a file while still printing it to 
 
 ```bash
 ./gollama -model llama3.1 -prompt "What's the Japanese word for 'Thank you'?" -output answer.txt
+```
+
+## Using Environment Variables
+
+You can set environment variables to use as defaults for the `-model` and `-url` parameters if they are not passed on the command line.
+
+### Setting `GOLLAMA_MODEL` and `GOLLAMA_URL`
+
+-   Set a default model:
+
+    ```bash
+    export GOLLAMA_MODEL="llama3.1"
+    ```
+
+-   Set a default URL:
+
+    ```bash
+    export GOLLAMA_URL="http://localhost:11434/api/generate"
+    ```
+
+When the environment variables are set, Gollama will use them as default values. You can still override them by passing `-model` and `-url` flags at runtime.
+
+### Clearing Environment Variables
+
+To clear an environment variable, use:
+
+```bash
+unset GOLLAMA_MODEL
+unset GOLLAMA_URL
 ```
 
 ## Command-line Flags:
