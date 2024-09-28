@@ -21,7 +21,7 @@ func main() {
 	// Check for the environment variable "NINO_MODEL"
 	defaultModel := os.Getenv("NINO_MODEL")
 	if defaultModel == "" {
-		defaultModel = "llama3.1" // Fallback default if the environment variable is not set
+		defaultModel = "llama3.2" // Fallback default if the environment variable is not set
 	}
 
 	// Check for the environment variable "NINO_URL"

@@ -2,20 +2,37 @@
 BINARY_NAME := nino
 BUILD_DIR := ./src/cmd/nino
 TEST_DIR := src
+DEFAULT_MODEL := "llama3.2"
+WARNING_MESSAGE := "Warning: Ollama not detected. Please run 'make install-deps' to install it."
 
 # Default target
 .PHONY: all
 all: test build
 
+# Reusable target for installing Ollama
+.PHONY: install-ollama
+install-ollama:
+	@echo "Installing or updating Ollama..."
+	@curl -fsSL https://ollama.com/install.sh | sh
+
+# Install dependencies (Ollama - https://github.com/ollama/ollama)
+.PHONY: install-deps
+install-deps:
+	@echo "Installing Ollama if not detected..."
+	@which ollama > /dev/null || $(MAKE) install-ollama
+
 # Build the project
 .PHONY: build
 build:
+	@echo "Building $(BINARY_NAME)..."
 	go build -C $(BUILD_DIR) -o ../../../$(BINARY_NAME)
+	@echo "Binary generated successfully: $(BINARY_NAME)"
+	@which ollama > /dev/null || echo $(WARNING_MESSAGE)
 
 # Update nino version on the user local binary directory
 .PHONY: 
 update-local-bin:
-	sudo cp ./nino /usr/local/bin/nino
+	sudo cp ./$(BINARY_NAME) /usr/local/bin/$(BINARY_NAME)
 
 # Run tests
 .PHONY: test
@@ -56,8 +73,10 @@ setup-git-hooks:
 	chmod +x git-hooks/*
 	@echo "Git hooks have been configured successfully."
 
-# Start the Ollama server with llama3.1 model in the background
+# Start the Ollama server with default model
 .PHONY: start-ollamma
 start-ollama:
-	@echo "Starting Ollama server in the background"
-	ollama serve & ollama run llama3.1
+	@echo "Starting Ollama server and model..."
+	ollama serve & ollama run $(DEFAULT_MODEL)
+	@echo "Ollama server is running with $(DEFAULT_MODEL)."
+	@echo "Open a new terminal window to run 'nino'."
