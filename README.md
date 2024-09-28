@@ -14,7 +14,7 @@ Nino enhances the basic interaction provided by Ollama by displaying full model 
 
 ## Screenshot
 
-![nino-cli-screenshot](https://github.com/user-attachments/assets/61f1029b-d41a-476b-917f-280ef4ff58a0)
+![nino-cli-screenshot](https://github.com/user-attachments/assets/49cb338b-098a-4789-bd8e-e349681b0de4)
 
 ## Features
 
