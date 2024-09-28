@@ -197,6 +197,13 @@ unset NINO_URL
 
 The `Makefile` in the nino project automates several key tasks like installing dependencies, building, testing, and cleaning the project.
 
+## TODOs
+
+-   [x] Launch v1.0
+-   [ ] Create GitHub Actions Recipes
+-   [ ] Add More Unit Tests
+-   [ ] Add Chat Mode Option
+
 ## Acknowledgements
 
 I would like to thank the developers of [Ollama](https://github.com/jmorganca/ollama) for providing the core tools that nino relies on. Additionally, a big thanks to the open-source community for creating the resources that made this project possible.
