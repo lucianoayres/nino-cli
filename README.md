@@ -1,5 +1,3 @@
-# nino
-
 ![nino-banner-v1](https://github.com/user-attachments/assets/6dec07fd-2adb-4eb8-8e67-5b2d9445c209)
 
 [About](#about-nino) · [Demo](#demo) · [Features](#features) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage Examples](#usage-examples) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile Usage](#makefile-usage) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
