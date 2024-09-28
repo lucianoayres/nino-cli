@@ -1,6 +1,6 @@
 # Define variables for the binary name, build directory, and test directory
-BINARY_NAME := gollama
-BUILD_DIR := ./src/cmd/gollama
+BINARY_NAME := nino
+BUILD_DIR := ./src/cmd/nino
 TEST_DIR := src
 
 # Default target
@@ -12,10 +12,10 @@ all: test build
 build:
 	go build -C $(BUILD_DIR) -o ../../../$(BINARY_NAME)
 
-# Update gollama version on the user local binary directory
+# Update nino version on the user local binary directory
 .PHONY: 
 update-local-bin:
-	sudo cp ./gollama /usr/local/bin/gollama
+	sudo cp ./nino /usr/local/bin/nino
 
 # Run tests
 .PHONY: test

@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"testing"
 
-	"gollama/internal/models"
+	"nino/internal/models"
 )
 
 // mockRoundTripper is a custom RoundTripper for mocking HTTP responses.

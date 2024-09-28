@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 
-	"gollama/internal/models"
+	"nino/internal/models"
 )
 
 // ProcessResponse reads and processes the response from the server

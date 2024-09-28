@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"gollama/internal/models"
+	"nino/internal/models"
 )
 
 // HTTPClient represents a client for making HTTP requests.
