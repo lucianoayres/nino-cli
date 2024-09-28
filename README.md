@@ -157,7 +157,7 @@ Additionally, file content can be passed as input using shell redirection:
 
 You can set environment variables to use as defaults for the `-model` and `-url` parameters if they are not passed on the command line.
 
-### Setting `NINO_MODEL` and `nino_URL`
+### Setting `NINO_MODEL` and `NINO_URL`
 
 -   Set a default model:
 
