@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
+	"net/url"
 	"nino/internal/client"
 	"nino/internal/models"
 	"nino/internal/processor"
@@ -22,7 +24,7 @@ func main() {
 		defaultModel = "llama3.1" // Fallback default if the environment variable is not set
 	}
 
-    // Check for the environment variable "NINO_URL"
+	// Check for the environment variable "NINO_URL"
 	defaultURL := os.Getenv("NINO_URL")
 	if defaultURL == "" {
 		defaultURL = "http://localhost:11434/api/generate" // Fallback default if the environment variable is not set
@@ -55,6 +57,14 @@ func main() {
 			log.Fatalf("Error reading prompt file '%s': %v", *promptFile, err)
 		}
 		*prompt = string(content)
+	}
+
+	// **Check if Ollama server is running**
+	if !isOllamaRunning(*url) {
+		fmt.Println("Oops! It looks like the Ollama server isn't running.")
+		fmt.Println("Please start the server and run the model you'd like to use. For example:")
+		fmt.Printf("ollama serve & ollama run %s\n", *model)
+		os.Exit(1)
 	}
 
 	// Initialize the HTTP client
@@ -122,9 +132,28 @@ func main() {
 	if *output != "" {
 		fmt.Printf("\nOutput saved to %s\n", *output)
 	} else {
-        // Add a newline for console output, so the shell prompt is displayed below
-        fmt.Fprintln(os.Stdout)
-    }
+		// Add a newline for console output, so the shell prompt is displayed below
+		fmt.Fprintln(os.Stdout)
+	}
+}
+
+// **Function to check if Ollama server is running**
+func isOllamaRunning(urlStr string) bool {
+	u, err := url.Parse(urlStr)
+	if err != nil {
+		return false
+	}
+	host := u.Host
+	if host == "" {
+		return false
+	}
+	// Try to establish a TCP connection to the host and port
+	conn, err := net.DialTimeout("tcp", host, 2*time.Second)
+	if err != nil {
+		return false
+	}
+	conn.Close()
+	return true
 }
 
 // showLoadingAnimation displays a loading animation in the console

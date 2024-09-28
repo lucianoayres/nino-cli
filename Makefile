@@ -55,3 +55,9 @@ setup-git-hooks:
 	git config core.hooksPath git-hooks
 	chmod +x git-hooks/*
 	@echo "Git hooks have been configured successfully."
+
+# Start the Ollama server with llama3.1 model in the background
+.PHONY: start-ollamma
+start-ollama:
+	@echo "Starting Ollama server in the background"
+	ollama serve & ollama run llama3.1
