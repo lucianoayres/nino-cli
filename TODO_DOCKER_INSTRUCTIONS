@@ -1,6 +1,6 @@
-## Running Gollama with Docker
+## Running nino with Docker
 
-You can containerize Gollama using Docker to simplify deployment and ensure consistent environments across different systems. This section provides instructions on how to build and run Gollama using Docker.
+You can containerize nino using Docker to simplify deployment and ensure consistent environments across different systems. This section provides instructions on how to build and run nino using Docker.
 
 ### Prerequisites
 
@@ -10,7 +10,7 @@ You can containerize Gollama using Docker to simplify deployment and ensure cons
 
 1. **Create a Dockerfile**
 
-    In the root directory of the Gollama project, create a file named `Dockerfile` with the following content:
+    In the root directory of the nino project, create a file named `Dockerfile` with the following content:
 
     ```dockerfile
     # Build Stage
@@ -36,13 +36,13 @@ You can containerize Gollama using Docker to simplify deployment and ensure cons
     WORKDIR /app
 
     # Copy the built binary from the builder stage
-    COPY --from=builder /app/gollama /app/gollama
+    COPY --from=builder /app/nino /app/nino
 
     # Expose any necessary ports (if applicable)
     # EXPOSE 8080
 
     # Set the entrypoint command
-    ENTRYPOINT ["./gollama"]
+    ENTRYPOINT ["./nino"]
     ```
 
     This Dockerfile uses a multi-stage build to keep the final image small.
@@ -52,25 +52,25 @@ You can containerize Gollama using Docker to simplify deployment and ensure cons
     Open a terminal in the root directory of the project and run:
 
     ```bash
-    docker build -t gollama:latest .
+    docker build -t nino:latest .
     ```
 
-    This command builds the Docker image and tags it as `gollama:latest`.
+    This command builds the Docker image and tags it as `nino:latest`.
 
-### Running Gollama Container
+### Running nino Container
 
-Since Gollama depends on the Ollama server, you need to ensure that the container running Gollama can communicate with the Ollama server.
+Since nino depends on the Ollama server, you need to ensure that the container running nino can communicate with the Ollama server.
 
 #### Option 1: Connect to an Ollama Server Running on the Host Machine
 
-If you have Ollama running on your host machine, you can run the Gollama Docker container and connect to the Ollama server running on your host.
+If you have Ollama running on your host machine, you can run the nino Docker container and connect to the Ollama server running on your host.
 
-1. **Run Gollama Docker Container**
+1. **Run nino Docker Container**
 
     ```bash
     docker run --rm -it \
       --add-host=host.docker.internal:host-gateway \
-      gollama:latest \
+      nino:latest \
       -model llama3.1 \
       -prompt "What is the capital of France?" \
       -url http://host.docker.internal:11434/api/generate
@@ -81,12 +81,12 @@ If you have Ollama running on your host machine, you can run the Gollama Docker 
 
 #### Option 2: Run Ollama Server Inside Another Docker Container
 
-You can run both Ollama and Gollama in Docker containers and connect them using a Docker network.
+You can run both Ollama and nino in Docker containers and connect them using a Docker network.
 
 1. **Create a Docker Network**
 
     ```bash
-    docker network create gollama-net
+    docker network create nino-net
     ```
 
 2. **Create a Docker Image for Ollama**
@@ -121,23 +121,23 @@ You can run both Ollama and Gollama in Docker containers and connect them using 
     ```bash
     docker run -d \
       --name ollama-server \
-      --network gollama-net \
+      --network nino-net \
       ollama:latest
     ```
 
-4. **Run Gollama Docker Container**
+4. **Run nino Docker Container**
 
     ```bash
     docker run --rm -it \
-      --network gollama-net \
-      gollama:latest \
+      --network nino-net \
+      nino:latest \
       -model llama3.1 \
       -prompt "What is the capital of France?" \
       -url http://ollama-server:11434/api/generate
     ```
 
-    - The `--network gollama-net` flag connects the container to the `gollama-net` network.
-    - The `-url http://ollama-server:11434/api/generate` argument tells Gollama to connect to the Ollama server running in the `ollama-server` container.
+    - The `--network nino-net` flag connects the container to the `nino-net` network.
+    - The `-url http://ollama-server:11434/api/generate` argument tells nino to connect to the Ollama server running in the `ollama-server` container.
 
 ### Using Docker Compose
 
@@ -153,27 +153,27 @@ To simplify running multiple containers, you can use Docker Compose.
         ollama-server:
             image: ollama:latest
             networks:
-                - gollama-net
+                - nino-net
             ports:
                 - "11434:11434"
             command: ollama serve
 
-        gollama:
-            image: gollama:latest
+        nino:
+            image: nino:latest
             depends_on:
                 - ollama-server
             networks:
-                - gollama-net
-            entrypoint: ["./gollama"]
+                - nino-net
+            entrypoint: ["./nino"]
             command: ["-model", "llama3.1", "-prompt", "What is the capital of France?", "-url", "http://ollama-server:11434/api/generate"]
 
     networks:
-        gollama-net:
+        nino-net:
             driver: bridge
     ```
 
     - Replace the prompt and model as needed.
-    - Ensure that the `ollama:latest` and `gollama:latest` images are built as per previous steps.
+    - Ensure that the `ollama:latest` and `nino:latest` images are built as per previous steps.
 
 2. **Run Docker Compose**
 
@@ -183,24 +183,24 @@ To simplify running multiple containers, you can use Docker Compose.
     docker-compose up
     ```
 
-    This command starts both the Ollama server and Gollama services, with Gollama sending prompts to the Ollama server.
+    This command starts both the Ollama server and nino services, with nino sending prompts to the Ollama server.
 
 ### Notes and Considerations
 
 -   **Docker Image for Ollama**: If there is an official Docker image for Ollama, use that image instead of building your own. Update the `docker-compose.yml` and Docker commands accordingly.
--   **Networking**: When using Docker, containers communicate over networks. Ensure that both Gollama and Ollama are on the same Docker network.
+-   **Networking**: When using Docker, containers communicate over networks. Ensure that both nino and Ollama are on the same Docker network.
 -   **Environment Variables**: You can pass environment variables to the Docker container using the `-e` flag in `docker run` or the `environment` section in `docker-compose.yml`.
 -   **Persistent Storage**: If you need to persist data or share files between your host and the container, consider using Docker volumes or bind mounts.
 -   **Platform Compatibility**: The `--network="host"` flag works differently on Linux, macOS, and Windows. On macOS and Windows, you might need to use `host.docker.internal` to reference the host machine.
 
 ### Example Docker Run Command
 
-Here is an example of running Gollama in Docker, connecting to an Ollama server running on the host:
+Here is an example of running nino in Docker, connecting to an Ollama server running on the host:
 
 ```bash
 docker run --rm -it \
   --add-host=host.docker.internal:host-gateway \
-  gollama:latest \
+  nino:latest \
   -model llama3.1 \
   -prompt "Who wrote 'To be, or not to be'?" \
   -url http://host.docker.internal:11434/api/generate
@@ -216,4 +216,4 @@ docker-compose down
 
 ## Conclusion
 
-Running Gollama with Docker allows for a consistent and isolated environment, making it easier to manage dependencies and deployments. Whether you choose to connect to an Ollama server running on your host machine or containerize both Gollama and Ollama, Docker provides the flexibility to suit your development and deployment needs.
+Running nino with Docker allows for a consistent and isolated environment, making it easier to manage dependencies and deployments. Whether you choose to connect to an Ollama server running on your host machine or containerize both nino and Ollama, Docker provides the flexibility to suit your development and deployment needs.
