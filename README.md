@@ -1,3 +1,5 @@
+# nino CLI | Run LLMs from the Command Line (Always Free)
+
 ![nino-banner-github](https://github.com/user-attachments/assets/4a2c91af-e212-46f9-9f07-e68ca42d65f7)
 
 [About](#about-nino) · [Demo](#demo) · [Features](#features) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage Examples](#usage-examples) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
