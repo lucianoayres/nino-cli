@@ -1,4 +1,4 @@
-# Nino
+# nino
 
 ![nino-banner-v1](https://github.com/user-attachments/assets/6dec07fd-2adb-4eb8-8e67-5b2d9445c209)
 
