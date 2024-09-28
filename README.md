@@ -4,7 +4,7 @@
 
 ### Run LLMs from the Command Line (Always Free)
 
-[About](#about-nino) · [Demo](#demo) · [Features](#features) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage Examples](#usage-examples) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
+[About](#about-nino) · [Screenshot](#screenshot) · [Features](#features) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage Examples](#usage-examples) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
 
 ## About Nino
 
@@ -12,9 +12,9 @@ Nino is a Golang command-line tool that simplifies interaction with local langua
 
 Nino enhances the basic interaction provided by Ollama by displaying full model responses in the terminal and enabling you to save outputs to a file, offering a seamless experience for working with language models.
 
-## Demo
+## Screenshot
 
-![btcq_demo](https://github.com/user-attachments/assets/180b8196-d1d2-44b9-95f3-19deeed4d808)
+![nino-cli-screenshot](https://github.com/user-attachments/assets/61f1029b-d41a-476b-917f-280ef4ff58a0)
 
 ## Features
 
