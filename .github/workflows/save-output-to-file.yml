@@ -1,0 +1,58 @@
+name: Install and Run Ollama v4
+
+on:
+    workflow_dispatch:
+        inputs:
+            model:
+                description: "The model to run with Ollama (e.g., llama3.2)"
+                required: true
+                default: "llama3.2"
+            prompt:
+                description: "The prompt to query the model"
+                required: true
+                default: "List the founding fathers of AI."
+
+permissions:
+    contents: read
+
+jobs:
+    run_ollama:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Checkout nino-cli repository instead of the current one
+            - name: Checkout nino-cli repository
+              uses: actions/checkout@v4
+              with:
+                  repository: lucianoayres/nino-cli
+
+            # Install Ollama
+            - name: Install Ollama
+              run: |
+                  curl -fsSL https://ollama.com/install.sh | sh
+
+            # Run Ollama server in the background
+            - name: Run Ollama server in the background
+              run: |
+                  nohup ollama serve & # Start Ollama server in the background
+
+            # Run the specified model using the 'model' input
+            - name: Run llama model
+              run: |
+                  ollama run ${{ github.event.inputs.model }}
+
+            # Set up Go environment
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version: "1.23"
+
+            # Build Go script from the cloned repository
+            - name: Build Go script
+              run: |
+                  make build
+
+            # Run Go script
+            - name: Run Go script
+              run: |
+                  ./nino -model "${{ github.event.inputs.model }}" -prompt "${{ github.event.inputs.prompt }}"
