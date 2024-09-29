@@ -4,7 +4,7 @@
 
 ### Run LLMs from the Command Line (Always Free)
 
-[About](#about-nino) · [Practical Examples](#practical-examples) · [Screenshot](#screenshot) · [Features](#features) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage](#usage) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [TODOs](#todos) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
+[About](#about-nino) · [Practical Examples](#practical-examples) · [Features](#features) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage](#usage) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [TODOs](#todos) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
 
 ## About Nino
 
