@@ -4,7 +4,7 @@
 
 ### Run LLMs from the Command Line (Always Free)
 
-[About](#about-nino) · [Screenshot](#screenshot) · [Features](#features) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage Examples](#usage-examples) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [TODOs](#todos) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
+[About](#about-nino) · [Screenshot](#example-usage) · [Screenshot](#screenshot) · [Features](#features) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage](#usage) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [TODOs](#todos) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
 
 ## About Nino
 
@@ -12,7 +12,23 @@ Nino is a Golang command-line tool that simplifies interaction with local langua
 
 Nino enhances the basic interaction provided by Ollama by displaying full model responses in the terminal and enabling you to save outputs to a file, offering a seamless experience for working with language models.
 
-## Screenshot
+## Practical Examples
+
+### Example 1: Analyzing Live Bitcoin Data
+
+Using the Nino CLI to request the AI to generate an investment strategy based on live bitcoin performance data:
+
+```bash
+./nino "Analyze Bitcoin's performance data and develop a long-term investment strategy: $(btcq -all-data)"
+```
+
+This command uses Bash's native command substitution to pull Bitcoin historical data through [btcq](https://github.com/lucianoayres/btcq-cli), another CLI tool. The analysis is conducted using the Llama 3.2 model.
+
+![nino-cli-screenshot-bitcoin-live-data](https://github.com/user-attachments/assets/3b431013-cfbb-49cb-bc0a-a1f4b7b1017f)
+
+### Example 2: Utilizing Optional Arguments
+
+Discover how to enhance Nino CLI's functionality with optional arguments.
 
 ![nino-cli-screenshot](https://github.com/user-attachments/assets/49cb338b-098a-4789-bd8e-e349681b0de4)
 
@@ -71,7 +87,7 @@ Ollama should now be running, and nino can interact with it by sending prompts.
     make build
     ```
 
-## Usage Examples
+## Usage
 
 After building the project and ensuring that the Ollama server is running, you can run nino with the following commands:
 
