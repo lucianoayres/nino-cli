@@ -1,4 +1,4 @@
-name: Install and Run Ollama v4
+name: Save the Nino CLI Output to Text File
 
 on:
     workflow_dispatch:
@@ -10,13 +10,17 @@ on:
             prompt:
                 description: "The prompt to query the model"
                 required: true
-                default: "List the founding fathers of AI."
+                default: "Hello world!"
+            output_filename:
+                description: "The output filename"
+                required: true
+                default: "llm_answer.txt"
 
 permissions:
     contents: read
 
 jobs:
-    run_ollama:
+    save_output_to_file:
         runs-on: ubuntu-latest
 
         steps:
@@ -47,12 +51,20 @@ jobs:
               with:
                   go-version: "1.23"
 
-            # Build Go script from the cloned repository
+            # Build nino-cli Go script from the cloned repository
             - name: Build Go script
               run: |
                   make build
 
-            # Run Go script
+            # Run nino-cli with the model and prompt arguments
             - name: Run Go script
               run: |
-                  ./nino -model "${{ github.event.inputs.model }}" -prompt "${{ github.event.inputs.prompt }}"
+                  ./nino \
+                    -model "${{ github.event.inputs.model }}" \
+                    -prompt "${{ github.event.inputs.prompt }}" \
+                    -output "${{ github.event.inputs.output_filename }}"
+
+            # Display saved file content on the console
+            - name: Display saved file content
+              run: |
+                  cat ${{ github.event.inputs.output_filename }}
