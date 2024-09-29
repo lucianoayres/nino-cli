@@ -14,7 +14,7 @@ on:
             output_filename:
                 description: "The output filename"
                 required: true
-                default: "llm_answer.txt"
+                default: "model_answer.txt"
 
 permissions:
     contents: read
