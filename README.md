@@ -4,13 +4,24 @@
 
 ### Run LLMs from the Command Line (Always Free)
 
-[About](#about-nino) · [Practical Examples](#practical-examples) · [Features](#features) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage](#usage) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [TODOs](#todos) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
+[About](#about-nino) · [Features](#features) · [Practical Examples](#practical-examples) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage](#usage) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [TODOs](#todos) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
 
 ## About Nino
 
 Nino is a Golang command-line tool that simplifies interaction with local language models served by [Ollama](https://github.com/jmorganca/ollama). It allows you to send prompts to models, receive real-time streaming responses directly in your terminal, and configure models using straightforward command-line arguments.
 
 Nino enhances the basic interaction provided by Ollama by displaying full model responses in the terminal and enabling you to save outputs to a file, offering a seamless experience for working with language models.
+
+## Features
+
+Enhance command-line workflows with Nino CLI:
+
+-   💎 Pipe outputs to the AI for real-time analysis.
+-   🐶 Pass file contents as arguments.
+-   🤖 Save AI responses to text files.
+-   💻 Seamlessly integrate with command-line tools.
+
+💖 Best of all, it's completely free, forever!
 
 ## Practical Examples
 
@@ -31,17 +42,6 @@ This command uses Bash's native command substitution to pull Bitcoin historical 
 Discover how to enhance Nino CLI's functionality with optional arguments.
 
 ![nino-cli-screenshot](https://github.com/user-attachments/assets/49cb338b-098a-4789-bd8e-e349681b0de4)
-
-## Features
-
-Enhance command-line workflows with Nino CLI:
-
--   💎 Pipe outputs to the AI for real-time analysis.
--   🐶 Pass file contents as arguments.
--   🤖 Save AI responses to text files.
--   💻 Seamlessly integrate with command-line tools.
-
-💖 Best of all, it's completely free, forever!
 
 ## Ollama Dependency
 
