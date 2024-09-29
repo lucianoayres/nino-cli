@@ -1,4 +1,4 @@
-name: Save the Nino CLI Output to Text File
+name: Save Model Output to Text File
 
 on:
     workflow_dispatch:
