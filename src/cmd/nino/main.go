@@ -38,9 +38,15 @@ func main() {
 	url := flag.String("url", defaultURL, "The host and port where the Ollama server is running")
 	output := flag.String("output", "", "Specifies the filename where the model output will be saved")
 	disableLoading := flag.Bool("no-loading", false, "Disable the loading animation")
+	silent := flag.Bool("silent", false, "Run in silent mode (no console output, requires -output)")
 
 	// Parse the flags
 	flag.Parse()
+
+	// Validate flags
+	if *silent && *output == "" {
+		log.Fatalf("Error: The -silent flag requires the -output flag to be specified.")
+	}
 
 	// Check if the prompt is provided via -prompt or -prompt-file
 	if *prompt == "" && *promptFile == "" {
@@ -78,9 +84,9 @@ func main() {
 		Prompt: *prompt,
 	}
 
-	// Start the loading animation in a goroutine if not disabled
+	// Start the loading animation in a goroutine if not disabled and not in silent mode
 	done := make(chan bool)
-	if !*disableLoading {
+	if !*disableLoading && !*silent {
 		go showLoadingAnimation(done)
 	}
 
@@ -88,7 +94,7 @@ func main() {
 	response, err := cli.SendRequest(payload)
 
 	// Stop the loading animation
-	if !*disableLoading {
+	if !*disableLoading && !*silent {
 		done <- true
 	}
 	if err != nil {
@@ -103,7 +109,10 @@ func main() {
 	}
 
 	// Prepare writers
-	writers := []io.Writer{os.Stdout} // Always write to console
+	var writers []io.Writer
+	if !*silent {
+		writers = append(writers, os.Stdout) // Write to console unless in silent mode
+	}
 
 	// If Output is specified, add the file to writers
 	if *output != "" {
@@ -126,18 +135,20 @@ func main() {
 	// Create a MultiWriter to write to all destinations
 	multiWriter := io.MultiWriter(writers...)
 
-	// Clear the line before writing the response
-	fmt.Print("\r\033[K")
+	// Clear the line before writing the response if not in silent mode
+	if !*silent {
+		fmt.Print("\r\033[K")
+	}
 
 	// Process the response and write to all writers
 	if err := processor.ProcessResponse(response.Body, multiWriter); err != nil {
 		log.Fatalf("Error processing response: %v", err)
 	}
 
-	// If output was saved to a file, notify the user
-	if *output != "" {
+	// If output was saved to a file and not in silent mode, notify the user
+	if *output != "" && !*silent {
 		fmt.Printf("\nOutput saved to %s\n", *output)
-	} else {
+	} else if !*silent {
 		// Add a newline for console output, so the shell prompt is displayed below
 		fmt.Fprintln(os.Stdout)
 	}

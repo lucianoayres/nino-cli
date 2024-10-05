@@ -182,6 +182,14 @@ Use the `-no-loading` flag to disable the loading animation for a cleaner output
 ./nino -no-loading "Explain the concept of chemical equilibrium."
 ```
 
+### Using Silent Mode
+
+You can supress the model output and loading animation and only save the output to a file:
+
+```bash
+./nino -model llama3.2 -prompt "What color models are available in CSS?" -silent -output answer.txt
+```
+
 ## Using Environment Variables
 
 You can set environment variables to use as defaults for the `-model` and `-url` parameters if they are not passed on the command line.
@@ -222,6 +230,7 @@ unset NINO_URL
     -   **The default `http://localhost:11434/api/generate` will be used if no URL is passed.**
 -   `-output` : Specifies the filename where the model output will be saved (optional).
 -   `-no-loading` : Disable the loading animation (optional).
+-   `-silent` : Suppresses model output and loading animation. Requires `-output` flag (optional).
 
 ## Makefile
 
