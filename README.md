@@ -243,10 +243,36 @@ The `Makefile` in the nino project automates several key tasks like installing d
 
 -   [Save Output to File](https://github.com/lucianoayres/nino-cli/actions/workflows/save-output-to-file.yml)
 
+Here’s an improved version of that README section:
+
+---
+
+### Triggering the Workflow via REST API
+
+You can trigger the GitHub Actions workflow with a REST API call using the following example. Be sure to replace placeholders with your actual `GitHub Token`, `Username`, `Repository name`, and `Workflow filename`. Example:
+
+```bash
+curl -X POST \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer YOUR_GITHUB_TOKEN" \
+  https://api.github.com/repos/lucianoayres/nino-cli/actions/workflows/save-output-to-file.yml/dispatches \
+  -d '{"ref":"main", "inputs": {"model": "llama3.2", "prompt": "Explain me the BM25 ranking algorithm", "output_filename": "result.txt"}}'
+```
+
+#### Steps to Generate a GitHub Token
+
+To trigger workflows via the API, you’ll need a GitHub personal access token. Follow these steps to generate one:
+
+1. Click on your profile photo in GitHub, go to **Settings**, and navigate to **Developer Settings**.
+2. Under **Personal Access Tokens**, click [Generate a new token](https://github.com/settings/tokens?type=beta).
+3. Select **Repository** as the scope.
+4. In **Repository Permissions**, ensure `Actions` and `Workflows` have `Read & Write` access.
+5. Generate and copy the token for use in your API call.
+
 ## TODOs
 
 -   [x] Launch v1.0
--   [ ] Create GitHub Actions Recipes
+-   [x] Create GitHub Actions Recipes
 -   [ ] Add Run With Docker Method
 -   [ ] Add Chat Mode Option
 
