@@ -238,7 +238,9 @@ The `Makefile` in the nino project automates several key tasks like installing d
 
 ## GitHub Actions
 
-[Sample GitHub Actions Workflows](https://github.com/lucianoayres/nino-cli/tree/main/.github/workflows) Utilizing Nino CLI for Generative AI Integration.
+[Sample workflows](https://github.com/lucianoayres/nino-cli/tree/main/.github/workflows) using Nino CLI for AI-Generated content integration:
+
+-   [Save Output to File](https://github.com/lucianoayres/nino-cli/actions/workflows/save-output-to-file.yml)
 
 ## TODOs
 
