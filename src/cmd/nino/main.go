@@ -24,8 +24,9 @@ func main() {
 
 	// Check if Ollama server is running
 	if !utils.IsOllamaRunning(cfg.URL) {
-		fmt.Println("Oops! It looks like the Ollama server isn't running.")
-		fmt.Println("Please start the server and run the model you'd like to use. For example:")
+		fmt.Printf("Oops! It looks like the Ollama server isn't running at %s.\n", cfg.URL)
+		fmt.Println("Please start the server at this URL or update the NINO_URL environment variable with the correct URL.")
+		fmt.Println("To start the server, you can run:")
 		fmt.Printf("ollama serve & ollama run %s\n", cfg.Model)
 		os.Exit(1)
 	}
