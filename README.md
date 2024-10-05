@@ -174,6 +174,14 @@ Additionally, file content can be passed as input using shell redirection:
 ./nino "Review the following project details and provide feedback:" < project.txt
 ```
 
+### Disabling the Loading Animation
+
+Use the `-no-loading` flag to disable the loading animation for a cleaner output:
+
+```bash
+./nino -no-loading "Explain the concept of chemical equilibrium."
+```
+
 ## Using Environment Variables
 
 You can set environment variables to use as defaults for the `-model` and `-url` parameters if they are not passed on the command line.
@@ -213,6 +221,7 @@ unset NINO_URL
 -   `-url` : The host and port where the Ollama server is running (optional).
     -   **The default `http://localhost:11434/api/generate` will be used if no URL is passed.**
 -   `-output` : Specifies the filename where the model output will be saved (optional).
+-   `-no-loading` : Disable the loading animation (optional).
 
 ## Makefile
 

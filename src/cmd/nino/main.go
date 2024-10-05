@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net"
 	"net/http"
 	"net/url"
@@ -36,6 +37,7 @@ func main() {
 	promptFile := flag.String("prompt-file", "", "The path to a file containing the prompt to send to the language model")
 	url := flag.String("url", defaultURL, "The host and port where the Ollama server is running")
 	output := flag.String("output", "", "Specifies the filename where the model output will be saved")
+	disableLoading := flag.Bool("no-loading", false, "Disable the loading animation")
 
 	// Parse the flags
 	flag.Parse()
@@ -76,15 +78,19 @@ func main() {
 		Prompt: *prompt,
 	}
 
-	// Start the loading animation in a goroutine
+	// Start the loading animation in a goroutine if not disabled
 	done := make(chan bool)
-	go showLoadingAnimation(done)
+	if !*disableLoading {
+		go showLoadingAnimation(done)
+	}
 
 	// Send the HTTP request
 	response, err := cli.SendRequest(payload)
 
 	// Stop the loading animation
-	done <- true
+	if !*disableLoading {
+		done <- true
+	}
 	if err != nil {
 		log.Fatalf("Error sending request: %v", err)
 	}
@@ -158,7 +164,8 @@ func isOllamaRunning(urlStr string) bool {
 
 // showLoadingAnimation displays a loading animation in the console
 func showLoadingAnimation(done chan bool) {
-	loadingText := "Thinking"
+	words := []string{"Thinking"} // Add more words to the list to pick it randomly
+	loadingText := words[rand.Intn(len(words))]
 	shades := []string{
 		"\033[1;30m", // Dark Gray
 		"\033[1;90m", // Light Dark Gray
@@ -185,7 +192,7 @@ func showLoadingAnimation(done chan bool) {
 						fmt.Printf("%s%c%s", shades[0], loadingText[i], resetColor)
 					}
 				}
-				time.Sleep(100 * time.Millisecond)
+				time.Sleep(150 * time.Millisecond)
 			}
 		}
 	}
