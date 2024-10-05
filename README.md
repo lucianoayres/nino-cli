@@ -265,7 +265,7 @@ To trigger workflows via the API, you’ll need a GitHub personal access token. 
 
 1. Click on your profile photo in GitHub, go to **Settings**, and navigate to **Developer Settings**.
 2. Under **Personal Access Tokens**, click [Generate a new token](https://github.com/settings/tokens?type=beta).
-3. Select **Repository** as the scope.
+3. Set the **Expiration** time and select a **Repository** as the scope.
 4. In **Repository Permissions**, ensure `Actions` and `Workflows` have `Read & Write` access.
 5. Generate and copy the token for use in your API call.
 
