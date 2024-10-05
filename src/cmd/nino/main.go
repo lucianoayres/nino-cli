@@ -40,6 +40,15 @@ func main() {
 	disableLoading := flag.Bool("no-loading", false, "Disable the loading animation")
 	silent := flag.Bool("silent", false, "Run in silent mode (no console output, requires -output)")
 
+	// Define short forms for the flags
+	flag.StringVar(model, "m", defaultModel, "The model to use (short form)")
+	flag.StringVar(prompt, "p", "", "The prompt to send to the language model (short form)")
+	flag.StringVar(promptFile, "pf", "", "The path to a file containing the prompt (short form)")
+	flag.StringVar(url, "u", defaultURL, "The host and port where the Ollama server is running (short form)")
+	flag.StringVar(output, "o", "", "Specifies the filename where the model output will be saved (short form)")
+	flag.BoolVar(disableLoading, "nl", false, "Disable the loading animation (short form)")
+	flag.BoolVar(silent, "s", false, "Run in silent mode (no console output, requires -output)")
+
 	// Parse the flags
 	flag.Parse()
 
