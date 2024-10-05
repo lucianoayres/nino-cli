@@ -168,10 +168,10 @@ You can dynamically generate input for nino by using shell command substitution 
 ./nino "Analyze my project directory and suggest maintenance improvements: $(ls -la)"
 ```
 
-Additionally, file content can be passed as input using shell redirection:
+Additionally, you can pass a shell script outputs as input:
 
 ```bash
-./nino "Review the following project details and provide feedback:" < project.txt
+./nino "$(./prompts/generate_commit_message.sh)"
 ```
 
 ### Disabling the Loading Animation
