@@ -221,16 +221,16 @@ unset NINO_URL
 
 ## Command-line Flags:
 
--   `-model` : The model to use (default: "llama3.2").
+-   `-model` or `-m` : The model to use (default: "llama3.2").
     -   This must match the model that is currently running on Ollama.
--   `-prompt` : The prompt to send to the language model (required unless `-prompt-file` is used).
--   `-prompt-file` : The path to a text file containing the prompt (optional).
+-   `-prompt` or `-p` : The prompt to send to the language model (required unless `-prompt-file` is used).
+-   `-prompt-file` or `-pf` : The path to a text file containing the prompt (optional).
     -   If both `-prompt` and `-prompt-file` are provided, `-prompt` takes precedence.
--   `-url` : The host and port where the Ollama server is running (optional).
+-   `-url` or `-u` : The host and port where the Ollama server is running (optional).
     -   The default `http://localhost:11434/api/generate` will be used if no URL is passed.
--   `-output` : Specifies the filename where the model output will be saved (optional).
--   `-no-loading` : Disable the loading animation (optional).
--   `-silent` : Suppresses model output and loading animation (optional).
+-   `-output` or `-o`: Specifies the filename where the model output will be saved (optional).
+-   `-no-loading` or `-nl` : Disable the loading animation (optional).
+-   `-silent` or `-s` : Suppresses model output and loading animation (optional).
     -   Requires `-output` flag.
 
 ## Makefile
