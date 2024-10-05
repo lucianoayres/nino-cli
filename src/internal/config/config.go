@@ -6,17 +6,18 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 )
 
 // Config holds the configuration for the request
 type Config struct {
-	Model         string
-	Prompt        string
-	PromptFile    string
-	URL           string
-	Output        string
+	Model          string
+	Prompt         string
+	PromptFile     string
+	URL            string
+	Output         string
 	DisableLoading bool
-	Silent        bool
+	Silent         bool
 }
 
 // ParseArgs parses command-line arguments and returns a Config struct
@@ -59,19 +60,37 @@ func ParseArgs() (*Config, error) {
 	// Parse the flags
 	flag.Parse()
 
-	// Check if the required prompt or prompt file is provided
+	// Validate flags
+	if *silentPtr && *outputPtr == "" {
+		return nil, errors.New("the -silent flag requires the -output flag to be specified")
+	}
+
+	// If the prompt is not provided via flags, check positional arguments
 	if *promptPtr == "" && *promptFilePtr == "" {
-		return nil, errors.New("either the prompt or prompt file is required")
+		args := flag.Args()
+		if len(args) == 0 {
+			return nil, errors.New("either the prompt or prompt file is required")
+		}
+		*promptPtr = strings.Join(args, " ")
+	}
+
+	// If the prompt-file is provided, read the file content
+	if *promptPtr == "" && *promptFilePtr != "" {
+		content, err := os.ReadFile(*promptFilePtr)
+		if err != nil {
+			return nil, fmt.Errorf("error reading prompt file '%s': %v", *promptFilePtr, err)
+		}
+		*promptPtr = string(content)
 	}
 
 	// Return the Config struct with all fields populated
 	return &Config{
-		Model:         *modelPtr,
-		Prompt:        *promptPtr,
-		PromptFile:    *promptFilePtr,
-		URL:           *urlPtr,
-		Output:        *outputPtr,
+		Model:          *modelPtr,
+		Prompt:         *promptPtr,
+		PromptFile:     *promptFilePtr,
+		URL:            *urlPtr,
+		Output:         *outputPtr,
 		DisableLoading: *disableLoadingPtr,
-		Silent:        *silentPtr,
+		Silent:         *silentPtr,
 	}, nil
 }

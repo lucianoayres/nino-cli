@@ -1,109 +1,55 @@
+// main.go
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io"
 	"log"
-	"math/rand"
-	"net"
 	"net/http"
-	"net/url"
 	"nino/internal/client"
+	"nino/internal/config"
 	"nino/internal/models"
 	"nino/internal/processor"
+	"nino/internal/utils"
 	"os"
 	"path/filepath"
-	"strings"
-	"time"
 )
 
 func main() {
-	// Check for the environment variable "NINO_MODEL"
-	defaultModel := os.Getenv("NINO_MODEL")
-	if defaultModel == "" {
-		defaultModel = "llama3.2" // Fallback default if the environment variable is not set
+	// Parse command-line arguments using the config package
+	cfg, err := config.ParseArgs()
+	if err != nil {
+		log.Fatalf("Error parsing arguments: %v", err)
 	}
 
-	// Check for the environment variable "NINO_URL"
-	defaultURL := os.Getenv("NINO_URL")
-	if defaultURL == "" {
-		defaultURL = "http://localhost:11434/api/generate" // Fallback default if the environment variable is not set
-	}
-
-	// Define command-line flags
-	model := flag.String("model", defaultModel, "The model to use")
-	prompt := flag.String("prompt", "", "The prompt to send to the language model")
-	promptFile := flag.String("prompt-file", "", "The path to a file containing the prompt to send to the language model")
-	url := flag.String("url", defaultURL, "The host and port where the Ollama server is running")
-	output := flag.String("output", "", "Specifies the filename where the model output will be saved")
-	disableLoading := flag.Bool("no-loading", false, "Disable the loading animation")
-	silent := flag.Bool("silent", false, "Run in silent mode (no console output, requires -output)")
-
-	// Define short forms for the flags
-	flag.StringVar(model, "m", defaultModel, "The model to use (short form)")
-	flag.StringVar(prompt, "p", "", "The prompt to send to the language model (short form)")
-	flag.StringVar(promptFile, "pf", "", "The path to a file containing the prompt (short form)")
-	flag.StringVar(url, "u", defaultURL, "The host and port where the Ollama server is running (short form)")
-	flag.StringVar(output, "o", "", "Specifies the filename where the model output will be saved (short form)")
-	flag.BoolVar(disableLoading, "nl", false, "Disable the loading animation (short form)")
-	flag.BoolVar(silent, "s", false, "Run in silent mode (no console output, requires -output)")
-
-	// Parse the flags
-	flag.Parse()
-
-	// Validate flags
-	if *silent && *output == "" {
-		log.Fatalf("Error: The -silent flag requires the -output flag to be specified.")
-	}
-
-	// Check if the prompt is provided via -prompt or -prompt-file
-	if *prompt == "" && *promptFile == "" {
-		args := flag.Args()
-		if len(args) == 0 {
-			fmt.Println("Error: No prompt provided. Use -prompt, -prompt-file flag or provide prompt as positional arguments.")
-			os.Exit(1)
-		}
-		*prompt = strings.Join(args, " ")
-	}
-
-	// If the prompt-file is provided, read the file content
-	if *prompt == "" && *promptFile != "" {
-		content, err := os.ReadFile(*promptFile)
-		if err != nil {
-			log.Fatalf("Error reading prompt file '%s': %v", *promptFile, err)
-		}
-		*prompt = string(content)
-	}
-
-	// **Check if Ollama server is running**
-	if !isOllamaRunning(*url) {
+	// Check if Ollama server is running
+	if !utils.IsOllamaRunning(cfg.URL) {
 		fmt.Println("Oops! It looks like the Ollama server isn't running.")
 		fmt.Println("Please start the server and run the model you'd like to use. For example:")
-		fmt.Printf("ollama serve & ollama run %s\n", *model)
+		fmt.Printf("ollama serve & ollama run %s\n", cfg.Model)
 		os.Exit(1)
 	}
 
 	// Initialize the HTTP client
-	cli := client.NewHTTPClient(*url)
+	cli := client.NewHTTPClient(cfg.URL)
 
 	// Prepare the request payload
 	payload := models.RequestPayload{
-		Model:  *model,
-		Prompt: *prompt,
+		Model:  cfg.Model,
+		Prompt: cfg.Prompt,
 	}
 
 	// Start the loading animation in a goroutine if not disabled and not in silent mode
 	done := make(chan bool)
-	if !*disableLoading && !*silent {
-		go showLoadingAnimation(done)
+	if !cfg.DisableLoading && !cfg.Silent {
+		go utils.ShowLoadingAnimation(done)
 	}
 
 	// Send the HTTP request
 	response, err := cli.SendRequest(payload)
 
 	// Stop the loading animation
-	if !*disableLoading && !*silent {
+	if !cfg.DisableLoading && !cfg.Silent {
 		done <- true
 	}
 	if err != nil {
@@ -119,23 +65,23 @@ func main() {
 
 	// Prepare writers
 	var writers []io.Writer
-	if !*silent {
+	if !cfg.Silent {
 		writers = append(writers, os.Stdout) // Write to console unless in silent mode
 	}
 
 	// If Output is specified, add the file to writers
-	if *output != "" {
+	if cfg.Output != "" {
 		// Validate the output directory exists
-		dir := filepath.Dir(*output)
+		dir := filepath.Dir(cfg.Output)
 		if dir != "." { // Skip if current directory
 			if _, err := os.Stat(dir); os.IsNotExist(err) {
 				log.Fatalf("Error: Directory '%s' does not exist.", dir)
 			}
 		}
 
-		file, err := os.Create(*output)
+		file, err := os.Create(cfg.Output)
 		if err != nil {
-			log.Fatalf("Error creating output file '%s': %v", *output, err)
+			log.Fatalf("Error creating output file '%s': %v", cfg.Output, err)
 		}
 		defer file.Close()
 		writers = append(writers, file)
@@ -145,7 +91,7 @@ func main() {
 	multiWriter := io.MultiWriter(writers...)
 
 	// Clear the line before writing the response if not in silent mode
-	if !*silent {
+	if !cfg.Silent {
 		fmt.Print("\r\033[K")
 	}
 
@@ -155,65 +101,10 @@ func main() {
 	}
 
 	// If output was saved to a file and not in silent mode, notify the user
-	if *output != "" && !*silent {
-		fmt.Printf("\nOutput saved to %s\n", *output)
-	} else if !*silent {
+	if cfg.Output != "" && !cfg.Silent {
+		fmt.Printf("\nOutput saved to %s\n", cfg.Output)
+	} else if !cfg.Silent {
 		// Add a newline for console output, so the shell prompt is displayed below
 		fmt.Fprintln(os.Stdout)
-	}
-}
-
-// **Function to check if Ollama server is running**
-func isOllamaRunning(urlStr string) bool {
-	u, err := url.Parse(urlStr)
-	if err != nil {
-		return false
-	}
-	host := u.Host
-	if host == "" {
-		return false
-	}
-	// Try to establish a TCP connection to the host and port
-	conn, err := net.DialTimeout("tcp", host, 2*time.Second)
-	if err != nil {
-		return false
-	}
-	conn.Close()
-	return true
-}
-
-// showLoadingAnimation displays a loading animation in the console
-func showLoadingAnimation(done chan bool) {
-	words := []string{"Thinking"} // Add more words to the list to pick it randomly
-	loadingText := words[rand.Intn(len(words))]
-	shades := []string{
-		"\033[1;30m", // Dark Gray
-		"\033[1;90m", // Light Dark Gray
-		"\033[1;37m", // Light Gray
-		"\033[0;37m", // White
-	}
-	resetColor := "\033[0m"
-	
-	for {
-		select {
-		case <-done:
-			// Clear the animation before stopping
-			fmt.Print("\r\033[K")
-			return
-		default:
-			// Create a wave effect by iterating over each character and applying shades
-			for waveStart := 0; waveStart < len(loadingText)+len(shades); waveStart++ {
-				fmt.Printf("\r")
-				for i := 0; i < len(loadingText); i++ {
-					shadeOffset := waveStart - i
-					if shadeOffset >= 0 && shadeOffset < len(shades) {
-						fmt.Printf("%s%c%s", shades[len(shades)-1-shadeOffset], loadingText[i], resetColor)
-					} else {
-						fmt.Printf("%s%c%s", shades[0], loadingText[i], resetColor)
-					}
-				}
-				time.Sleep(150 * time.Millisecond)
-			}
-		}
 	}
 }
