@@ -71,6 +71,5 @@ jobs:
 
             # Display saved file content on the console
             - name: Display saved file content
-              if: ${{ !github.event.inputs.silent }}
               run: |
                   cat ${{ github.event.inputs.output_filename }}
