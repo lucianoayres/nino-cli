@@ -247,7 +247,6 @@ The `Makefile` in the nino project automates several key tasks like installing d
 
 -   [x] Launch v1.0
 -   [ ] Create GitHub Actions Recipes
--   [ ] Add More Unit Tests
 -   [ ] Add Run With Docker Method
 -   [ ] Add Chat Mode Option
 
