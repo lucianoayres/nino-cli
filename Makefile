@@ -34,11 +34,18 @@ build:
 update-local-bin:
 	sudo cp ./$(BINARY_NAME) /usr/local/bin/$(BINARY_NAME)
 
-# Run tests
+# Run tests with verbose mode
 .PHONY: test
 test:
 	@echo "Running tests..."
 	go test -C $(TEST_DIR) ./...
+	@echo "Tests complete"
+
+# Run tests with verbose mode
+.PHONY: test-verbose
+test-verbose:
+	@echo "Running tests..."
+	go test -C $(TEST_DIR) ./... -v
 	@echo "Tests complete"
 
 # Run tests with coverage
