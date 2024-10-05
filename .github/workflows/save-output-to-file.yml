@@ -15,6 +15,10 @@ on:
                 description: "The output filename"
                 required: true
                 default: "model_answer.txt"
+            silent:
+                description: "Suppresses model output and loading animation"
+                required: false
+                default: "true"
 
 permissions:
     contents: read
@@ -56,15 +60,17 @@ jobs:
               run: |
                   make build
 
-            # Run nino-cli with the model and prompt arguments
+            # Run nino-cli with the model, prompt, and silent arguments
             - name: Run Go script
               run: |
                   ./nino \
                     -model "${{ github.event.inputs.model }}" \
                     -prompt "${{ github.event.inputs.prompt }}" \
-                    -output "${{ github.event.inputs.output_filename }}"
+                    -output "${{ github.event.inputs.output_filename }}" \
+                    ${{ github.event.inputs.silent && '-silent' || '' }}
 
             # Display saved file content on the console
             - name: Display saved file content
+              if: ${{ !github.event.inputs.silent }}
               run: |
                   cat ${{ github.event.inputs.output_filename }}
