@@ -158,18 +158,35 @@ func isOllamaRunning(urlStr string) bool {
 
 // showLoadingAnimation displays a loading animation in the console
 func showLoadingAnimation(done chan bool) {
-	animation := []rune{'|', '/', '-', '\\'}
-	i := 0
+	loadingText := "Thinking"
+	shades := []string{
+		"\033[1;30m", // Dark Gray
+		"\033[1;90m", // Light Dark Gray
+		"\033[1;37m", // Light Gray
+		"\033[0;37m", // White
+	}
+	resetColor := "\033[0m"
+	
 	for {
 		select {
 		case <-done:
-			// Clear the animation line before stopping
+			// Clear the animation before stopping
 			fmt.Print("\r\033[K")
 			return
 		default:
-			fmt.Printf("\r%c Loading...", animation[i%len(animation)])
-			i++
-			time.Sleep(100 * time.Millisecond)
+			// Create a wave effect by iterating over each character and applying shades
+			for waveStart := 0; waveStart < len(loadingText)+len(shades); waveStart++ {
+				fmt.Printf("\r")
+				for i := 0; i < len(loadingText); i++ {
+					shadeOffset := waveStart - i
+					if shadeOffset >= 0 && shadeOffset < len(shades) {
+						fmt.Printf("%s%c%s", shades[len(shades)-1-shadeOffset], loadingText[i], resetColor)
+					} else {
+						fmt.Printf("%s%c%s", shades[0], loadingText[i], resetColor)
+					}
+				}
+				time.Sleep(100 * time.Millisecond)
+			}
 		}
 	}
 }
