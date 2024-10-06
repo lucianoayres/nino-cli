@@ -8,20 +8,17 @@ on:
 permissions:
     contents: read
 
+env:
+    MODEL: "llama3.2"
+    PROMPT: "Inspired by The Office, craft an original quote that brings the Dunder Mifflin spirit to life."
+    OUTPUT_FILENAME: "model_answer.txt"
+    SILENT: "true"
+
 jobs:
     save_output_to_file:
         runs-on: ubuntu-latest
 
         steps:
-            # Define variables
-            - name: Set variables
-              id: set_vars
-              run: |
-                  echo "MODEL=llama3.2" >> $GITHUB_ENV
-                  echo "PROMPT=Inspired by The Office, craft an original quote that brings the Dunder Mifflin spirit to life." >> $GITHUB_ENV
-                  echo "OUTPUT_FILENAME=model_answer.txt" >> $GITHUB_ENV
-                  echo "SILENT=true" >> $GITHUB_ENV
-
             # Checkout nino-cli repository instead of the current one
             - name: Checkout nino-cli repository
               uses: actions/checkout@v4
@@ -41,7 +38,7 @@ jobs:
             # Run the specified model using a pre-defined variable
             - name: Run llama model
               run: |
-                  ollama run "$MODEL"
+                  ollama run "${{ env.MODEL }}"
 
             # Set up Go environment
             - name: Set up Go
@@ -58,12 +55,12 @@ jobs:
             - name: Run Go script
               run: |
                   ./nino \
-                    -model "$MODEL" \
-                    -prompt "$PROMPT" \
-                    -output "$OUTPUT_FILENAME" \
-                    $([ "$SILENT" == "true" ] && echo "-silent")
+                    -model "${{ env.MODEL }}" \
+                    -prompt "${{ env.PROMPT }}" \
+                    -output "${{ env.OUTPUT_FILENAME }}" \
+                    $([ "${{ env.SILENT }}" == "true" ] && echo "-silent")
 
             # Display saved file content on the console
             - name: Display saved file content
               run: |
-                  cat "$OUTPUT_FILENAME"
+                  cat "${{ env.OUTPUT_FILENAME }}"
