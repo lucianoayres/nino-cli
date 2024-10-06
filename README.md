@@ -241,9 +241,9 @@ The `Makefile` in the nino project automates several key tasks like installing d
 
 [Sample workflows](https://github.com/lucianoayres/nino-cli/tree/main/.github/workflows) using Nino CLI for AI-Generated content integration:
 
--   [Generate Daily Quote](https://github.com/lucianoayres/nino-cli/actions/workflows/generate-daily-quote.yml)
+-   [Generate Daily Quote](https://github.com/lucianoayres/nino-cli/actions/workflows/generate-daily-quote.yml): Generate a quote, export it to a file and save it as artifact on GitHub daily at midnight.
 
--   [Save Output to File](https://github.com/lucianoayres/nino-cli/actions/workflows/save-output-to-file.yml)
+-   [Save Output to File](https://github.com/lucianoayres/nino-cli/actions/workflows/save-output-to-file.yml): Dispatch the workflow with selected inputs by the user, and then export the model response to a file.
 
 ### Triggering the Workflow via REST API
 
@@ -257,7 +257,7 @@ curl -X POST \
   -d '{"ref":"main", "inputs": {"model": "llama3.2", "prompt": "Explain me the BM25 ranking algorithm", "output_filename": "result.txt"}}'
 ```
 
-#### Steps to Generate a GitHub Token
+#### Steps to Generate a Personal Access Token (PAT) on GitHub
 
 To trigger workflows via the API, you’ll need a GitHub personal access token. Follow these steps to generate one:
 
