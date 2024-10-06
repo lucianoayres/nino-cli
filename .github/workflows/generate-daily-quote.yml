@@ -1,4 +1,4 @@
-name: Save Model Output to Text File
+name: Generate Daily Quote
 
 on:
     schedule:
@@ -15,7 +15,7 @@ env:
     SILENT: "true"
 
 jobs:
-    save_output_to_file:
+    generate_daily_quote:
         runs-on: ubuntu-latest
 
         steps:
