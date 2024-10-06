@@ -1,4 +1,4 @@
-name: Gnerate Daily Quote
+name: Save Model Output to Text File
 
 on:
     schedule:
@@ -9,19 +9,18 @@ permissions:
     contents: read
 
 jobs:
-    generate_daily_quote:
+    save_output_to_file:
         runs-on: ubuntu-latest
 
         steps:
-            # Pre-defined variables
+            # Define variables
             - name: Set variables
+              id: set_vars
               run: |
-                  MODEL="llama3.2"
-                  PROMPT="Inspired by The Office, 
-                  craft an original quote that brings 
-                  the Dunder Mifflin spirit to life."
-                  OUTPUT_FILENAME="quote_of_the_day.txt"
-                  SILENT="false"
+                  echo "MODEL=llama3.2" >> $GITHUB_ENV
+                  echo "PROMPT=Inspired by The Office, craft an original quote that brings the Dunder Mifflin spirit to life." >> $GITHUB_ENV
+                  echo "OUTPUT_FILENAME=model_answer.txt" >> $GITHUB_ENV
+                  echo "SILENT=true" >> $GITHUB_ENV
 
             # Checkout nino-cli repository instead of the current one
             - name: Checkout nino-cli repository
@@ -39,10 +38,10 @@ jobs:
               run: |
                   nohup ollama serve & # Start Ollama server in the background
 
-            # Run the specified model using the pre-defined variable
+            # Run the specified model using a pre-defined variable
             - name: Run llama model
               run: |
-                  ollama run $MODEL
+                  ollama run "$MODEL"
 
             # Set up Go environment
             - name: Set up Go
@@ -67,4 +66,4 @@ jobs:
             # Display saved file content on the console
             - name: Display saved file content
               run: |
-                  cat $OUTPUT_FILENAME
+                  cat "$OUTPUT_FILENAME"
