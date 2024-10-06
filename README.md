@@ -243,6 +243,8 @@ The `Makefile` in the nino project automates several key tasks like installing d
 
 -   [Save Output to File](https://github.com/lucianoayres/nino-cli/actions/workflows/save-output-to-file.yml)
 
+-   [Generate Daily Quote](https://github.com/lucianoayres/nino-cli/actions/workflows/generate-daily-quote.yml)
+
 ### Triggering the Workflow via REST API
 
 You can trigger the GitHub Actions workflow with a REST API call using the following example. Be sure to replace placeholders with your actual `GitHub Token`, `Username`, `Repository name`, and `Workflow filename`. Example:

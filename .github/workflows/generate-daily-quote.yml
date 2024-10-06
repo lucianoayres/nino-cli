@@ -14,8 +14,7 @@ env:
         Inspired by The Office, craft an original quote 
         that brings the Dunder Mifflin spirit to life. 
         Only output the quote and the author name.
-    OUTPUT_FILENAME: "model_answer.txt"
-    SILENT: "true"
+    NO_LOADING_ANIMATION: "true"
 
 jobs:
     generate_daily_quote:
@@ -54,16 +53,10 @@ jobs:
               run: |
                   make build
 
-            # Run nino-cli with the model, prompt, and silent arguments
+            # Run nino-cli with the model, prompt, and no-loading arguments
             - name: Run Go script
               run: |
                   ./nino \
                     -model "${{ env.MODEL }}" \
                     -prompt "${{ env.PROMPT }}" \
-                    -output "${{ env.OUTPUT_FILENAME }}" \
-                    $([ "${{ env.SILENT }}" == "true" ] && echo "-silent")
-
-            # Display saved file content on the console
-            - name: Display saved file content
-              run: |
-                  cat "${{ env.OUTPUT_FILENAME }}"
+                    $([ "${{ env.NO_LOADING_ANIMATION }}" == "true" ] && echo "-no-loading")
