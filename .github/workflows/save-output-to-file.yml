@@ -18,6 +18,10 @@ on:
             silent:
                 description: "Suppresses model output and loading animation"
                 required: false
+                type: "choice"
+                options:
+                    - true
+                    - false
                 default: "true"
 
 permissions:
