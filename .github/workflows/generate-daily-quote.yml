@@ -10,7 +10,7 @@ permissions:
 
 env:
     MODEL: "llama3.2"
-    PROMPT: "Inspired by The Office, craft an original quote that brings the Dunder Mifflin spirit to life."
+    PROMPT: "Inspired by The Office, craft an original quote that brings the Dunder Mifflin spirit to life. Only output the quote and the author name."
     OUTPUT_FILENAME: "model_answer.txt"
     SILENT: "true"
 
