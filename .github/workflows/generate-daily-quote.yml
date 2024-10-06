@@ -1,0 +1,70 @@
+name: Gnerate Daily Quote
+
+on:
+    schedule:
+        - cron: "0 0 * * *"
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    generate_daily_quote:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Pre-defined variables
+            - name: Set variables
+              run: |
+                  MODEL="llama3.2"
+                  PROMPT="Inspired by The Office, 
+                  craft an original quote that brings 
+                  the Dunder Mifflin spirit to life."
+                  OUTPUT_FILENAME="quote_of_the_day.txt"
+                  SILENT="false"
+
+            # Checkout nino-cli repository instead of the current one
+            - name: Checkout nino-cli repository
+              uses: actions/checkout@v4
+              with:
+                  repository: lucianoayres/nino-cli
+
+            # Install Ollama
+            - name: Install Ollama
+              run: |
+                  curl -fsSL https://ollama.com/install.sh | sh
+
+            # Run Ollama server in the background
+            - name: Run Ollama server in the background
+              run: |
+                  nohup ollama serve & # Start Ollama server in the background
+
+            # Run the specified model using the pre-defined variable
+            - name: Run llama model
+              run: |
+                  ollama run $MODEL
+
+            # Set up Go environment
+            - name: Set up Go
+              uses: actions/setup-go@v4
+              with:
+                  go-version: "1.23"
+
+            # Build nino-cli Go script from the cloned repository
+            - name: Build Go script
+              run: |
+                  make build
+
+            # Run nino-cli with the model, prompt, and silent arguments
+            - name: Run Go script
+              run: |
+                  ./nino \
+                    -model "$MODEL" \
+                    -prompt "$PROMPT" \
+                    -output "$OUTPUT_FILENAME" \
+                    $([ "$SILENT" == "true" ] && echo "-silent")
+
+            # Display saved file content on the console
+            - name: Display saved file content
+              run: |
+                  cat $OUTPUT_FILENAME
