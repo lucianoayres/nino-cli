@@ -14,6 +14,7 @@ env:
         Inspired by The Office, craft an original quote 
         that brings the Dunder Mifflin spirit to life. 
         Only output the quote and the author name.
+    OUTPUT_FILENAME: "quote.txt"
     NO_LOADING_ANIMATION: "true"
 
 jobs:
@@ -59,4 +60,12 @@ jobs:
                   ./nino \
                     -model "${{ env.MODEL }}" \
                     -prompt "${{ env.PROMPT }}" \
+                    -output "${{ env.OUTPUT_FILENAME }}" \
                     $([ "${{ env.NO_LOADING_ANIMATION }}" == "true" ] && echo "-no-loading")
+
+            # Upload the output file as an artifact
+            - name: Upload output file
+              uses: actions/upload-artifact@v4
+              with:
+                  name: the-office-daily-quote
+                  path: "${{ env.OUTPUT_FILENAME }}"
