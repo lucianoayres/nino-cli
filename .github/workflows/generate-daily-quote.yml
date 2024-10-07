@@ -2,7 +2,7 @@ name: Generate Daily Quote
 
 on:
     schedule:
-        - cron: "0 0 * * *"
+        - cron: "0 0 * * *" # Run at 00:00 UTC
     workflow_dispatch:
 
 permissions:

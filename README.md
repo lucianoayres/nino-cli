@@ -241,7 +241,7 @@ The `Makefile` in the nino project automates several key tasks like installing d
 
 [Sample workflows](https://github.com/lucianoayres/nino-cli/tree/main/.github/workflows) using Nino CLI for AI-Generated content integration:
 
--   [Generate Daily Quote](https://github.com/lucianoayres/nino-cli/actions/workflows/generate-daily-quote.yml): Generate a quote, export it to a file and save it as artifact on GitHub daily at midnight.
+-   [Generate Daily Quote](https://github.com/lucianoayres/nino-cli/actions/workflows/generate-daily-quote.yml): Generate a quote, export it to a file and save it as artifact on GitHub daily at midnight (00:00 UTC).
 
 -   [Save Output to File](https://github.com/lucianoayres/nino-cli/actions/workflows/save-output-to-file.yml): Dispatch the workflow with selected inputs by the user, export the model response to a file, commit it, and then push the changes to the remote repository.
 
