@@ -10,11 +10,13 @@ on:
             prompt:
                 description: "The prompt to query the model"
                 required: true
-                default: "Generate a Random Wisdom Quote in Korean with its Meaning in English"
+                default: |
+                    "Combine the best of tropical fruits to generate a unique 
+                    and delicious juice blend that's bursting with flavor and nutrients."
             output_filename:
                 description: "The output filename"
                 required: true
-                default: "model_answer.txt"
+                default: "juice_of_the_day.txt"
             silent:
                 description: "Suppresses model output and loading animation"
                 required: false
