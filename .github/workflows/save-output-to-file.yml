@@ -10,7 +10,7 @@ on:
             prompt:
                 description: "The prompt to query the model"
                 required: true
-                default: "Hello world!"
+                default: "Generate a Random Wisdom Quote in Korean with its Meaning in English"
             output_filename:
                 description: "The output filename"
                 required: true
