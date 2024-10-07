@@ -70,7 +70,7 @@ jobs:
                   ./nino \
                     -model "${{ github.event.inputs.model }}" \
                     -prompt "${{ github.event.inputs.prompt }}" \
-                    -output "./generated-content/${{ github.event.inputs.output_filename }}" \
+                    -output ./generated-content/${{ github.event.inputs.output_filename }} \
                     ${{ github.event.inputs.silent == 'true' && '-silent' || '' }}
 
             # Display saved file content on the console
