@@ -31,6 +31,9 @@ jobs:
     save_output_to_file:
         runs-on: ubuntu-latest
 
+        env:
+            OUTPUT_FILE_PATH: ./generated-content/${{ github.event.inputs.output_filename }}
+
         steps:
             # Checkout nino-cli repository instead of the current one
             - name: Checkout nino-cli repository
@@ -70,19 +73,19 @@ jobs:
                   ./nino \
                     -model "${{ github.event.inputs.model }}" \
                     -prompt "${{ github.event.inputs.prompt }}" \
-                    -output ./generated-content/${{ github.event.inputs.output_filename }} \
+                    -output "${{ env.OUTPUT_FILE_PATH }}" \
                     ${{ github.event.inputs.silent == 'true' && '-silent' || '' }}
 
             # Display saved file content on the console
             - name: Display saved file content
               run: |
-                  cat ./generated-content/${{ github.event.inputs.output_filename }}
+                  cat "${{ env.OUTPUT_FILE_PATH }}"
 
             # Commit generated file
             - name: Commit Changes
               run: |
                   git config --global user.name 'github-actions[bot]'
                   git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-                  git add ./generated-content/${{ github.event.inputs.output_filename }}
+                  git add "${{ env.OUTPUT_FILE_PATH }}"
                   git commit -m "doc: add generated output file"
                   git push
