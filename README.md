@@ -140,8 +140,10 @@ Wrap the prompt text with """:
 
 ### Using Multimodal Models
 
+For models that support image inputs (like `llava`), you can include images using the `-image` or `-i` flag:
+
 ```bash
-./nino -model llava -prompt "What's in this image? /home/luciano/img-9872.png"
+./nino -model llava -prompt "What's in this image?" -image ./assets/images/sample-01.png
 ```
 
 ### Using an Alternative Model
@@ -226,9 +228,8 @@ unset NINO_URL
 -   `-prompt` or `-p` : The prompt to send to the language model (required unless `-prompt-file` is used).
 -   `-prompt-file` or `-pf` : The path to a text file containing the prompt (optional).
     -   If both `-prompt` and `-prompt-file` are provided, `-prompt` takes precedence.
--   `-image` or `-i`: Paths to local image files to include in the request (optional).
+-   `-image` or `-i`: Path to local image file to include in the request (optional).
     -   Note: This flag only works with multimodal models that support image inputs.
-    -   Can be specified multiple times to include multiple images.
 -   `-url` or `-u` : The host and port where the Ollama server is running (optional).
     -   The default `http://localhost:11434/api/generate` will be used if no URL is passed.
 -   `-output` or `-o`: Specifies the filename where the model output will be saved (optional).
