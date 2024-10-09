@@ -34,10 +34,20 @@ func main() {
 	// Initialize the HTTP client
 	cli := client.NewHTTPClient(cfg.URL)
 
+	// Read and encode images
+	var imagesBase64 []string
+	if len(cfg.ImagePaths) > 0 {
+		imagesBase64, err = utils.ReadImagesAsBase64(cfg.ImagePaths)
+		if err != nil {
+			log.Fatalf("Error processing images: %v", err)
+		}
+	}
+
 	// Prepare the request payload
 	payload := models.RequestPayload{
 		Model:  cfg.Model,
 		Prompt: cfg.Prompt,
+		Images: imagesBase64, // Assign the base64-encoded images
 	}
 
 	// Start the loading animation in a goroutine if not disabled and not in silent mode

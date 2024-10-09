@@ -3,7 +3,7 @@ package config
 
 import (
 	"flag"
-	"io/ioutil"
+	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -14,9 +14,22 @@ func TestParseArgs(t *testing.T) {
 	// Create a temporary prompt file for testing
 	tmpDir := t.TempDir()
 	promptFilePath := filepath.Join(tmpDir, "prompt.txt")
-	err := ioutil.WriteFile(promptFilePath, []byte("Hello from file"), 0644)
+	err := os.WriteFile(promptFilePath, []byte("Hello from file"), 0644)
 	if err != nil {
 		t.Fatalf("Failed to create temporary prompt file: %v", err)
+	}
+
+	// Create temporary image files for testing
+	imageFilePath1 := filepath.Join(tmpDir, "image1.jpg")
+	err = os.WriteFile(imageFilePath1, []byte{0xFF, 0xD8, 0xFF, 0xE0}, 0644) // JPEG header bytes
+	if err != nil {
+		t.Fatalf("Failed to create temporary image file 1: %v", err)
+	}
+
+	imageFilePath2 := filepath.Join(tmpDir, "image2.jpg")
+	err = os.WriteFile(imageFilePath2, []byte{0xFF, 0xD8, 0xFF, 0xE1}, 0644) // JPEG header bytes
+	if err != nil {
+		t.Fatalf("Failed to create temporary image file 2: %v", err)
 	}
 
 	tests := []struct {
@@ -39,6 +52,7 @@ func TestParseArgs(t *testing.T) {
 				Output:         "result.txt",
 				DisableLoading: false,
 				Silent:         false,
+				ImagePaths:     []string{},
 			},
 			wantErr: false,
 		},
@@ -53,6 +67,7 @@ func TestParseArgs(t *testing.T) {
 				Output:         "result.txt",
 				DisableLoading: false,
 				Silent:         false,
+				ImagePaths:     []string{},
 			},
 			wantErr: false,
 		},
@@ -73,6 +88,7 @@ func TestParseArgs(t *testing.T) {
 				Output:         "",
 				DisableLoading: false,
 				Silent:         false,
+				ImagePaths:     []string{},
 			},
 			wantErr: false,
 		},
@@ -87,6 +103,7 @@ func TestParseArgs(t *testing.T) {
 				Output:         "",
 				DisableLoading: false,
 				Silent:         false,
+				ImagePaths:     []string{},
 			},
 			wantErr: false,
 		},
@@ -101,6 +118,7 @@ func TestParseArgs(t *testing.T) {
 				Output:         "",
 				DisableLoading: false,
 				Silent:         false,
+				ImagePaths:     []string{},
 			},
 			wantErr: false,
 		},
@@ -127,6 +145,7 @@ func TestParseArgs(t *testing.T) {
 				Output:         "result.txt",
 				DisableLoading: false,
 				Silent:         true,
+				ImagePaths:     []string{},
 			},
 			wantErr: false,
 		},
@@ -143,6 +162,7 @@ func TestParseArgs(t *testing.T) {
 				Output:         "",
 				DisableLoading: false,
 				Silent:         false,
+				ImagePaths:     []string{},
 			},
 			wantErr: false,
 		},
@@ -157,6 +177,82 @@ func TestParseArgs(t *testing.T) {
 				Output:         "result.txt",
 				DisableLoading: true,
 				Silent:         true,
+				ImagePaths:     []string{},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Single image path using long flag",
+			args: []string{"cmd", "--prompt=Hello", "--image", imageFilePath1},
+			wantConfig: &Config{
+				Model:          "llama3.2",
+				Prompt:         "Hello",
+				PromptFile:     "",
+				URL:            "http://localhost:11434/api/generate",
+				Output:         "",
+				DisableLoading: false,
+				Silent:         false,
+				ImagePaths:     []string{imageFilePath1},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Multiple image paths using long flag",
+			args: []string{"cmd", "--prompt=Hello", "--image", imageFilePath1, "--image", imageFilePath2},
+			wantConfig: &Config{
+				Model:          "llama3.2",
+				Prompt:         "Hello",
+				PromptFile:     "",
+				URL:            "http://localhost:11434/api/generate",
+				Output:         "",
+				DisableLoading: false,
+				Silent:         false,
+				ImagePaths:     []string{imageFilePath1, imageFilePath2},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Multiple image paths using short flag",
+			args: []string{"cmd", "--prompt=Hello", "-i", imageFilePath1, "-i", imageFilePath2},
+			wantConfig: &Config{
+				Model:          "llama3.2",
+				Prompt:         "Hello",
+				PromptFile:     "",
+				URL:            "http://localhost:11434/api/generate",
+				Output:         "",
+				DisableLoading: false,
+				Silent:         false,
+				ImagePaths:     []string{imageFilePath1, imageFilePath2},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Image path with missing file",
+			args: []string{"cmd", "--prompt=Hello", "--image", "nonexistent.jpg"},
+			wantConfig: &Config{
+				Model:          "llama3.2",
+				Prompt:         "Hello",
+				PromptFile:     "",
+				URL:            "http://localhost:11434/api/generate",
+				Output:         "",
+				DisableLoading: false,
+				Silent:         false,
+				ImagePaths:     []string{"nonexistent.jpg"},
+			},
+			wantErr: false, // The parsing does not check if the file exists
+		},
+		{
+			name: "Combination of image flags and prompt file",
+			args: []string{"cmd", "--prompt-file", promptFilePath, "--image", imageFilePath1, "-i", imageFilePath2},
+			wantConfig: &Config{
+				Model:          "llama3.2",
+				Prompt:         "Hello from file",
+				PromptFile:     promptFilePath,
+				URL:            "http://localhost:11434/api/generate",
+				Output:         "",
+				DisableLoading: false,
+				Silent:         false,
+				ImagePaths:     []string{imageFilePath1, imageFilePath2},
 			},
 			wantErr: false,
 		},
@@ -164,10 +260,11 @@ func TestParseArgs(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Save and restore os.Args and environment variables
+			// Save and restore os.Args, environment variables, and flag.CommandLine
 			origArgs := os.Args
 			origEnvModel := os.Getenv("NINO_MODEL")
 			origEnvURL := os.Getenv("NINO_URL")
+			origFlagCommandLine := flag.CommandLine
 
 			defer func() {
 				os.Args = origArgs
@@ -181,8 +278,15 @@ func TestParseArgs(t *testing.T) {
 				} else {
 					os.Unsetenv("NINO_URL")
 				}
-				flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError) // Reset flags
+				flag.CommandLine = origFlagCommandLine
 			}()
+
+			// Reset flags before each test
+			flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+			flag.CommandLine.Usage = func() {
+				fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+				flag.CommandLine.PrintDefaults()
+			}
 
 			// Set os.Args to the test case arguments
 			os.Args = tt.args

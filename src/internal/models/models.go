@@ -11,6 +11,7 @@ type ResponsePayload struct {
 
 // RequestPayload represents the payload sent in the HTTP request.
 type RequestPayload struct {
-	Model  string `json:"model"`
-	Prompt string `json:"prompt"`
+	Model  string   `json:"model"`
+	Prompt string   `json:"prompt"`
+	Images []string `json:"images"` // New field for images in base64
 }

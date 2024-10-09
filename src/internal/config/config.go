@@ -18,6 +18,19 @@ type Config struct {
 	Output         string
 	DisableLoading bool
 	Silent         bool
+	ImagePaths     []string // New field for image paths
+}
+
+// arrayFlags is a custom type for parsing multiple -image flags
+type arrayFlags []string
+
+func (i *arrayFlags) String() string {
+	return strings.Join(*i, ",")
+}
+
+func (i *arrayFlags) Set(value string) error {
+	*i = append(*i, value)
+	return nil
 }
 
 // ParseArgs parses command-line arguments and returns a Config struct
@@ -50,6 +63,12 @@ func ParseArgs() (*Config, error) {
 	flag.StringVar(outputPtr, "o", "", "The file to save the output to (short form, optional)")
 	flag.BoolVar(disableLoadingPtr, "nl", false, "Disable the loading animation (short form)")
 	flag.BoolVar(silentPtr, "s", false, "Run in silent mode (short form, requires -output)")
+
+	// Define the new -image flag which can be specified multiple times
+	imagePaths := arrayFlags{}
+	
+	flag.Var(&imagePaths, "image", "Paths to local image files (can be specified multiple times)")
+	flag.Var(&imagePaths, "i", "Paths to local image files (short form)")
 
 	// Customize the usage message (optional)
 	flag.Usage = func() {
@@ -92,5 +111,6 @@ func ParseArgs() (*Config, error) {
 		Output:         *outputPtr,
 		DisableLoading: *disableLoadingPtr,
 		Silent:         *silentPtr,
+		ImagePaths:     imagePaths, // Assign the collected image paths
 	}, nil
 }

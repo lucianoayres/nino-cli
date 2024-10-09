@@ -226,6 +226,9 @@ unset NINO_URL
 -   `-prompt` or `-p` : The prompt to send to the language model (required unless `-prompt-file` is used).
 -   `-prompt-file` or `-pf` : The path to a text file containing the prompt (optional).
     -   If both `-prompt` and `-prompt-file` are provided, `-prompt` takes precedence.
+-   `-image` or `-i`: Paths to local image files to include in the request (optional).
+    -   Note: This flag only works with multimodal models that support image inputs.
+    -   Can be specified multiple times to include multiple images.
 -   `-url` or `-u` : The host and port where the Ollama server is running (optional).
     -   The default `http://localhost:11434/api/generate` will be used if no URL is passed.
 -   `-output` or `-o`: Specifies the filename where the model output will be saved (optional).
