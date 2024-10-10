@@ -108,7 +108,7 @@ Ollama should now be running, and nino can interact with it by sending prompts.
 
 After building the project and ensuring that the Ollama server is running, you can run nino with the following commands:
 
-### Using Default Model and URL:
+### Using Default Model and URL
 
 You can use nino with just a prompt as the only argument. By default, it will use the `llama3.2` model and connect to the default URL and port for the local Ollama server:
 
@@ -122,13 +122,13 @@ To prevent unintended line breaks or splitting of arguments in the shell, it's r
 ./nino "What's the typical temperature range for a CPU while gaming?"
 ```
 
-### Using `-model` and `-prompt` Arguments:
+### Using `-model` and `-prompt` Arguments
 
 ```bash
 ./nino -model llama3.2 -prompt "Which country has the most time zones?"
 ```
 
-### Using `-prompt-file` Argument:
+### Using `-prompt-file` Argument
 
 You can pass a text file containing the prompt using the `-prompt-file` flag:
 
@@ -250,7 +250,7 @@ unset NINO_URL
 unset NINO_SYSTEM_PROMPT
 ```
 
-## Command-line Flags:
+## Command-line Flags
 
 -   `-model` or `-m` : The model to use (default: "llama3.2").
     -   This must match the model that is currently running on Ollama.
