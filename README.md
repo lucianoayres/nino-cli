@@ -293,8 +293,10 @@ To trigger workflows via the API, you’ll need a GitHub personal access token. 
 
 -   [x] Launch v1.0
 -   [x] Create GitHub Actions Recipes
+-   [x] Add Multimodal Model Support
+-   [ ] Add Custom Modelfiles
+-   [ ] Add Chat Mode Support
 -   [ ] Add Run With Docker Method
--   [ ] Add Chat Mode Option
 
 ## Acknowledgements
 
