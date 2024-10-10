@@ -46,6 +46,8 @@ func ParseArgs() (*Config, error) {
 		defaultURL = "http://localhost:11434/api/generate" // Fallback default
 	}
 
+	systemPrompt := os.Getenv("NINO_SYSTEM_PROMPT")
+
 	// Define the flags with their long forms
 	modelPtr := flag.String("model", defaultModel, "The model to use (default is llama3.2)")
 	promptPtr := flag.String("prompt", "", "The prompt to send (required)")
@@ -66,7 +68,7 @@ func ParseArgs() (*Config, error) {
 
 	// Define the new -image flag which can be specified multiple times
 	imagePaths := arrayFlags{}
-	
+
 	flag.Var(&imagePaths, "image", "Paths to local image files (can be specified multiple times)")
 	flag.Var(&imagePaths, "i", "Paths to local image files (short form)")
 
@@ -100,6 +102,11 @@ func ParseArgs() (*Config, error) {
 			return nil, fmt.Errorf("error reading prompt file '%s': %v", *promptFilePtr, err)
 		}
 		*promptPtr = string(content)
+	}
+
+	// Concatenate system prompt if it is set
+	if systemPrompt != "" {
+		*promptPtr = systemPrompt + " " + *promptPtr
 	}
 
 	// Return the Config struct with all fields populated

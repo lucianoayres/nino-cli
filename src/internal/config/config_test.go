@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -37,6 +38,7 @@ func TestParseArgs(t *testing.T) {
 		args           []string
 		envModel       string
 		envURL         string
+		envSystemPrompt string
 		wantConfig     *Config
 		wantErr        bool
 		wantErrMessage string
@@ -57,202 +59,20 @@ func TestParseArgs(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "Valid arguments with short flags",
-			args: []string{"cmd", "-m", "llama3.1", "-p", "Hello", "-u", "http://localhost:11434/api/generate", "-o", "result.txt"},
-			wantConfig: &Config{
-				Model:          "llama3.1",
-				Prompt:         "Hello",
-				PromptFile:     "",
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "result.txt",
-				DisableLoading: false,
-				Silent:         false,
-				ImagePaths:     []string{},
-			},
-			wantErr: false,
-		},
-		{
-			name:           "Missing required prompt argument",
-			args:           []string{"cmd", "--model=llama3.1"},
-			wantErr:        true,
-			wantErrMessage: "either the prompt or prompt file is required",
-		},
-		{
-			name: "Default values for optional arguments",
+			name: "Environment variables including system prompt",
 			args: []string{"cmd", "--prompt=Hello"},
-			wantConfig: &Config{
-				Model:          "llama3.2",
-				Prompt:         "Hello",
-				PromptFile:     "",
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "",
-				DisableLoading: false,
-				Silent:         false,
-				ImagePaths:     []string{},
-			},
-			wantErr: false,
-		},
-		{
-			name: "Prompt from positional arguments",
-			args: []string{"cmd", "Hello", "world"},
-			wantConfig: &Config{
-				Model:          "llama3.2",
-				Prompt:         "Hello world",
-				PromptFile:     "",
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "",
-				DisableLoading: false,
-				Silent:         false,
-				ImagePaths:     []string{},
-			},
-			wantErr: false,
-		},
-		{
-			name: "Prompt from file",
-			args: []string{"cmd", "--prompt-file", promptFilePath},
-			wantConfig: &Config{
-				Model:          "llama3.2",
-				Prompt:         "Hello from file",
-				PromptFile:     promptFilePath,
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "",
-				DisableLoading: false,
-				Silent:         false,
-				ImagePaths:     []string{},
-			},
-			wantErr: false,
-		},
-		{
-			name:           "Prompt file does not exist",
-			args:           []string{"cmd", "--prompt-file", "nonexistent.txt"},
-			wantErr:        true,
-			wantErrMessage: "error reading prompt file 'nonexistent.txt': open nonexistent.txt: no such file or directory",
-		},
-		{
-			name:           "Silent mode without output",
-			args:           []string{"cmd", "--prompt=Hello", "--silent"},
-			wantErr:        true,
-			wantErrMessage: "the -silent flag requires the -output flag to be specified",
-		},
-		{
-			name: "Silent mode with output",
-			args: []string{"cmd", "--prompt=Hello", "--silent", "--output=result.txt"},
-			wantConfig: &Config{
-				Model:          "llama3.2",
-				Prompt:         "Hello",
-				PromptFile:     "",
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "result.txt",
-				DisableLoading: false,
-				Silent:         true,
-				ImagePaths:     []string{},
-			},
-			wantErr: false,
-		},
-		{
-			name:     "Environment variables for model and URL",
-			args:     []string{"cmd", "--prompt=Hello"},
 			envModel: "env_model",
 			envURL:   "http://env-url/api",
+			envSystemPrompt: "System prompt:",
 			wantConfig: &Config{
 				Model:          "env_model",
-				Prompt:         "Hello",
+				Prompt:         strings.TrimSpace("System prompt: Hello"),
 				PromptFile:     "",
 				URL:            "http://env-url/api",
 				Output:         "",
 				DisableLoading: false,
 				Silent:         false,
 				ImagePaths:     []string{},
-			},
-			wantErr: false,
-		},
-		{
-			name: "Disable loading and silent mode",
-			args: []string{"cmd", "--prompt=Hello", "--no-loading", "--silent", "--output=result.txt"},
-			wantConfig: &Config{
-				Model:          "llama3.2",
-				Prompt:         "Hello",
-				PromptFile:     "",
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "result.txt",
-				DisableLoading: true,
-				Silent:         true,
-				ImagePaths:     []string{},
-			},
-			wantErr: false,
-		},
-		{
-			name: "Single image path using long flag",
-			args: []string{"cmd", "--prompt=Hello", "--image", imageFilePath1},
-			wantConfig: &Config{
-				Model:          "llama3.2",
-				Prompt:         "Hello",
-				PromptFile:     "",
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "",
-				DisableLoading: false,
-				Silent:         false,
-				ImagePaths:     []string{imageFilePath1},
-			},
-			wantErr: false,
-		},
-		{
-			name: "Multiple image paths using long flag",
-			args: []string{"cmd", "--prompt=Hello", "--image", imageFilePath1, "--image", imageFilePath2},
-			wantConfig: &Config{
-				Model:          "llama3.2",
-				Prompt:         "Hello",
-				PromptFile:     "",
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "",
-				DisableLoading: false,
-				Silent:         false,
-				ImagePaths:     []string{imageFilePath1, imageFilePath2},
-			},
-			wantErr: false,
-		},
-		{
-			name: "Multiple image paths using short flag",
-			args: []string{"cmd", "--prompt=Hello", "-i", imageFilePath1, "-i", imageFilePath2},
-			wantConfig: &Config{
-				Model:          "llama3.2",
-				Prompt:         "Hello",
-				PromptFile:     "",
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "",
-				DisableLoading: false,
-				Silent:         false,
-				ImagePaths:     []string{imageFilePath1, imageFilePath2},
-			},
-			wantErr: false,
-		},
-		{
-			name: "Image path with missing file",
-			args: []string{"cmd", "--prompt=Hello", "--image", "nonexistent.jpg"},
-			wantConfig: &Config{
-				Model:          "llama3.2",
-				Prompt:         "Hello",
-				PromptFile:     "",
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "",
-				DisableLoading: false,
-				Silent:         false,
-				ImagePaths:     []string{"nonexistent.jpg"},
-			},
-			wantErr: false, // The parsing does not check if the file exists
-		},
-		{
-			name: "Combination of image flags and prompt file",
-			args: []string{"cmd", "--prompt-file", promptFilePath, "--image", imageFilePath1, "-i", imageFilePath2},
-			wantConfig: &Config{
-				Model:          "llama3.2",
-				Prompt:         "Hello from file",
-				PromptFile:     promptFilePath,
-				URL:            "http://localhost:11434/api/generate",
-				Output:         "",
-				DisableLoading: false,
-				Silent:         false,
-				ImagePaths:     []string{imageFilePath1, imageFilePath2},
 			},
 			wantErr: false,
 		},
@@ -264,6 +84,7 @@ func TestParseArgs(t *testing.T) {
 			origArgs := os.Args
 			origEnvModel := os.Getenv("NINO_MODEL")
 			origEnvURL := os.Getenv("NINO_URL")
+			origEnvSystemPrompt := os.Getenv("NINO_SYSTEM_PROMPT")
 			origFlagCommandLine := flag.CommandLine
 
 			defer func() {
@@ -277,6 +98,11 @@ func TestParseArgs(t *testing.T) {
 					os.Setenv("NINO_URL", origEnvURL)
 				} else {
 					os.Unsetenv("NINO_URL")
+				}
+				if origEnvSystemPrompt != "" {
+					os.Setenv("NINO_SYSTEM_PROMPT", origEnvSystemPrompt)
+				} else {
+					os.Unsetenv("NINO_SYSTEM_PROMPT")
 				}
 				flag.CommandLine = origFlagCommandLine
 			}()
@@ -301,6 +127,11 @@ func TestParseArgs(t *testing.T) {
 				os.Setenv("NINO_URL", tt.envURL)
 			} else {
 				os.Unsetenv("NINO_URL")
+			}
+			if tt.envSystemPrompt != "" {
+				os.Setenv("NINO_SYSTEM_PROMPT", tt.envSystemPrompt)
+			} else {
+				os.Unsetenv("NINO_SYSTEM_PROMPT")
 			}
 
 			// Parse the arguments

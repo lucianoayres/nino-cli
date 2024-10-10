@@ -212,7 +212,7 @@ You can supress the model output and loading animation and only save the output 
 
 ## Using Environment Variables
 
-You can set environment variables to use as defaults for the `-model` and `-url` parameters if they are not passed on the command line.
+You can set environment variables to use as defaults for the `-model` and `-url` parameters if they are not passed on the command line. Additionally, you can set a base system prompt to automatically prefix all user prompts.
 
 ### Setting `NINO_MODEL` and `NINO_URL`
 
@@ -228,7 +228,17 @@ You can set environment variables to use as defaults for the `-model` and `-url`
     export NINO_URL="http://localhost:11434/api/generate"
     ```
 
-When the environment variables are set, nino will use them as default values. You can still override them by passing `-model` and `-url` flags at runtime.
+    When environment variables are set, Nino uses them as defaults. To override these defaults, use the `-model` and `-url` flags at runtime.
+
+### Setting `NINO_SYSTEM_PROMPT`
+
+-   Set a default system prompt for all user prompts:
+
+    ```bash
+    export NINO_SYSTEM_PROMPT="Do not use markdown in your answer:"
+    ```
+
+    The `NINO_SYSTEM_PROMPT` cannot be overridden once set. To reset it, follow the instructions in the next section.
 
 ### Clearing Environment Variables
 
@@ -237,6 +247,7 @@ To clear an environment variable, use:
 ```bash
 unset NINO_MODEL
 unset NINO_URL
+unset NINO_SYSTEM_PROMPT
 ```
 
 ## Command-line Flags:
