@@ -238,7 +238,7 @@ You can set environment variables to use as defaults for the `-model` and `-url`
     export NINO_SYSTEM_PROMPT="Do not use markdown in your answer:"
     ```
 
-    The `NINO_SYSTEM_PROMPT` cannot be overridden once set. To reset it, follow the instructions in the next section.
+    The `NINO_SYSTEM_PROMPT` cannot be overridden once set. To reset it, follow the instructions below.
 
 ### Clearing Environment Variables
 
