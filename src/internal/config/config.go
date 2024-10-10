@@ -109,6 +109,11 @@ func ParseArgs() (*Config, error) {
 		*promptPtr = systemPrompt + " " + *promptPtr
 	}
 
+	// Concatenate image paths to the prompt if any
+	if len(imagePaths) > 0 {
+		*promptPtr = strings.TrimSpace(*promptPtr + " " + strings.Join(imagePaths, " "))
+	}
+
 	// Return the Config struct with all fields populated
 	return &Config{
 		Model:          *modelPtr,

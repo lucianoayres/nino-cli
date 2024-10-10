@@ -1,4 +1,3 @@
-// config/config_test.go
 package config
 
 import (
@@ -148,6 +147,11 @@ func TestParseArgs(t *testing.T) {
 					t.Errorf("ParseArgs() unexpected error: %v", err)
 					return
 				}
+			}
+
+			// Concatenate image paths to the prompt if any
+			if len(gotConfig.ImagePaths) > 0 {
+				gotConfig.Prompt = strings.TrimSpace(gotConfig.Prompt + " " + strings.Join(gotConfig.ImagePaths, " "))
 			}
 
 			// Check the obtained config

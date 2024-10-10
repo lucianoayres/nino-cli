@@ -50,6 +50,25 @@ func main() {
 		Images: imagesBase64, // Assign the base64-encoded images
 	}
 
+	// SAVE PAYLOAD FILE TO JSON
+	/*
+	file, err := os.Create("payload.json")
+	if err != nil {
+		log.Fatalf("Error creating payload file: %v", err)
+	}
+	defer file.Close()
+
+	payloadJSON, err := json.MarshalIndent(payload, "", "  ")
+	if err != nil {
+		log.Fatalf("Error marshalling payload to JSON: %v", err)
+	}
+
+	if _, err := file.Write(payloadJSON); err != nil {
+		log.Fatalf("Error writing payload to file: %v", err)
+	}
+	// END OF SAVE PAYLOAD FILE TO JSON
+	*/
+
 	// Start the loading animation in a goroutine if not disabled and not in silent mode
 	done := make(chan bool)
 	if !cfg.DisableLoading && !cfg.Silent {
