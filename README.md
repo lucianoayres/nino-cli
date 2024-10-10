@@ -35,13 +35,25 @@ Using the Nino CLI to request the AI to generate an investment strategy based on
 
 This command uses Bash's native command substitution to pull Bitcoin historical data through [btcq](https://github.com/lucianoayres/btcq-cli), another CLI tool. The analysis is conducted using the Llama 3.2 model.
 
-![nino-cli-screenshot-bitcoin-live-data](https://github.com/user-attachments/assets/3b431013-cfbb-49cb-bc0a-a1f4b7b1017f)
+![nino-cli-screenshot-bitcoin-live-data-analysis](https://github.com/user-attachments/assets/bc96f1f6-d528-4461-b67a-2c6c83104b74)
 
-### Example 2: Utilizing Optional Arguments
+### Example 2: Advanced Image Analysis
+
+Nino CLI supports multimodal models like `llava`, allowing analysis beyond text by processing images:
+
+```bash
+./nino -m "llava" -p "Describe this image in a short sentence" -image ./assets/images/sample-01.png
+```
+
+![nino-cli-screenshot-advanced-image-analysis](https://github.com/user-attachments/assets/1833cabc-973f-41bb-a716-5be69ba18e7a)
+
+Users can pass an image file to analyze visual data, recognize patterns, or extract insights from images.
+
+### Example 3: Utilizing Optional Arguments
 
 Discover how to enhance Nino CLI's functionality with optional arguments.
 
-![nino-cli-screenshot](https://github.com/user-attachments/assets/49cb338b-098a-4789-bd8e-e349681b0de4)
+![nino-cli-screenshot-optional-arguments](https://github.com/user-attachments/assets/f774cc0f-47e5-4579-8efb-9fbb86b2d682)
 
 ## Ollama Dependency
 
@@ -146,6 +158,12 @@ For models that support image inputs (like `llava`), you can include images usin
 ./nino -model llava -prompt "What's in this image?" -image ./assets/images/sample-01.png
 ```
 
+You can pass multiple images as arguments:
+
+```bash
+./nino -model llava -prompt "Describe each image in a single word." -image ./assets/images/sample-01.png -image ./assets/images/sample-02.png
+```
+
 ### Using an Alternative Model
 
 This example uses all parameters with the `mistral` model. Ensure Ollama is running with `mistral`:
@@ -229,7 +247,7 @@ unset NINO_URL
 -   `-prompt-file` or `-pf` : The path to a text file containing the prompt (optional).
     -   If both `-prompt` and `-prompt-file` are provided, `-prompt` takes precedence.
 -   `-image` or `-i`: Path to local image file to include in the request (optional).
-    -   Note: This flag only works with multimodal models that support image inputs.
+    -   Note: This flag is compatible only with multimodal models that support image inputs. It can be used multiple times to include multiple images in a single request.
 -   `-url` or `-u` : The host and port where the Ollama server is running (optional).
     -   The default `http://localhost:11434/api/generate` will be used if no URL is passed.
 -   `-output` or `-o`: Specifies the filename where the model output will be saved (optional).
