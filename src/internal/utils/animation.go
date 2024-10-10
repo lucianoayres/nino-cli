@@ -11,7 +11,6 @@ func ShowLoadingAnimation(done chan bool) {
 	words := []string{"Thinking"} // Add more words to the list to pick randomly
 	loadingText := words[rand.Intn(len(words))]
 	shades := []string{
-		"\033[1;30m", // Dark Gray
 		"\033[1;90m", // Light Dark Gray
 		"\033[1;37m", // Light Gray
 		"\033[0;37m", // White
