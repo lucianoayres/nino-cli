@@ -17,6 +17,7 @@ Nino enhances the basic interaction provided by Ollama by displaying full model 
 Enhance command-line workflows with Nino CLI:
 
 -   💎 Pipe outputs to the AI for real-time analysis.
+-   🖼️ Analyze images with multimodal models.
 -   🐶 Pass file contents as arguments.
 -   🤖 Save AI responses to text files.
 -   💻 Seamlessly integrate with command-line tools.
