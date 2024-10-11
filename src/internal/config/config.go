@@ -20,6 +20,7 @@ type Config struct {
 	Silent         bool
 	ImagePaths     []string // New field for image paths
 	Format         string
+	Stream         bool
 }
 
 // arrayFlags is a custom type for parsing multiple -image flags
@@ -58,6 +59,7 @@ func ParseArgs() (*Config, error) {
 	disableLoadingPtr := flag.Bool("no-loading", false, "Disable the loading animation (optional)")
 	silentPtr := flag.Bool("silent", false, "Run in silent mode (no console output, requires -output)")
 	formatPtr := flag.String("format", "", "The format of the output (must be 'json')")
+	disableStreamPtr := flag.Bool("disable-stream", false, "Disable streaming the output (optional)")
 
 	// Define short forms for the existing flags
 	flag.StringVar(modelPtr, "m", defaultModel, "The model to use (short form)")
@@ -68,6 +70,7 @@ func ParseArgs() (*Config, error) {
 	flag.BoolVar(disableLoadingPtr, "nl", false, "Disable the loading animation (short form)")
 	flag.BoolVar(silentPtr, "s", false, "Run in silent mode (short form, requires -output)")
 	flag.StringVar(formatPtr, "f", "", "The format of the output (short form, must be 'json')")
+	flag.BoolVar(disableStreamPtr, "ds", false, "Disable streaming the output (short form)")
 
 	// Define the new -image flag which can be specified multiple times
 	imagePaths := arrayFlags{}
@@ -132,5 +135,6 @@ func ParseArgs() (*Config, error) {
 		Silent:         *silentPtr,
 		ImagePaths:     imagePaths, // Assign the collected image paths
 		Format:         *formatPtr,
+		Stream:         !*disableStreamPtr,
 	}, nil
 }
