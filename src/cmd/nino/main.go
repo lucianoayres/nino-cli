@@ -48,6 +48,7 @@ func main() {
 		Model:  cfg.Model,
 		Prompt: cfg.Prompt,
 		Images: imagesBase64, // Assign the base64-encoded images
+		Format: cfg.Format,
 	}
 
 	// SAVE PAYLOAD FILE TO JSON

@@ -19,6 +19,7 @@ type Config struct {
 	DisableLoading bool
 	Silent         bool
 	ImagePaths     []string // New field for image paths
+	Format         string
 }
 
 // arrayFlags is a custom type for parsing multiple -image flags
@@ -56,6 +57,7 @@ func ParseArgs() (*Config, error) {
 	outputPtr := flag.String("output", "", "The file to save the output to (optional)")
 	disableLoadingPtr := flag.Bool("no-loading", false, "Disable the loading animation (optional)")
 	silentPtr := flag.Bool("silent", false, "Run in silent mode (no console output, requires -output)")
+	formatPtr := flag.String("format", "", "The format of the output (must be 'json')")
 
 	// Define short forms for the existing flags
 	flag.StringVar(modelPtr, "m", defaultModel, "The model to use (short form)")
@@ -65,6 +67,7 @@ func ParseArgs() (*Config, error) {
 	flag.StringVar(outputPtr, "o", "", "The file to save the output to (short form, optional)")
 	flag.BoolVar(disableLoadingPtr, "nl", false, "Disable the loading animation (short form)")
 	flag.BoolVar(silentPtr, "s", false, "Run in silent mode (short form, requires -output)")
+	flag.StringVar(formatPtr, "f", "", "The format of the output (short form, must be 'json')")
 
 	// Define the new -image flag which can be specified multiple times
 	imagePaths := arrayFlags{}
@@ -84,6 +87,10 @@ func ParseArgs() (*Config, error) {
 	// Validate flags
 	if *silentPtr && *outputPtr == "" {
 		return nil, errors.New("the -silent flag requires the -output flag to be specified")
+	}
+
+	if *formatPtr != "" && *formatPtr != "json" {
+		return nil, errors.New("the -format flag must be set to 'json' if specified")
 	}
 
 	// If the prompt is not provided via flags, check positional arguments
@@ -124,5 +131,6 @@ func ParseArgs() (*Config, error) {
 		DisableLoading: *disableLoadingPtr,
 		Silent:         *silentPtr,
 		ImagePaths:     imagePaths, // Assign the collected image paths
+		Format:         *formatPtr,
 	}, nil
 }

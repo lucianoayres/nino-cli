@@ -14,4 +14,5 @@ type RequestPayload struct {
 	Model  string   `json:"model"`
 	Prompt string   `json:"prompt"`
 	Images []string `json:"images"` // New field for images in base64
+	Format string 	`json:"format"`
 }

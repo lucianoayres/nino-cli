@@ -173,6 +173,14 @@ This example uses all parameters with the `mistral` model. Ensure Ollama is runn
 ./nino -model mistral -prompt "What is the capital of Australia?" -url http://localhost:55555/api/generate -output result.txt
 ```
 
+### Using JSON Format Responses
+
+To get a JSON response, use the `-format "json"` flag and ensure your prompt explicitly requests a JSON response:
+
+```bash
+./nino -model llama3.2 -prompt "What are the top 5 most abundant chemical elements on Earth? Respond using JSON." -format "json"
+```
+
 ### Using an Output File
 
 You can optionally save the model's output to a file while still printing it to the console with the following command:
@@ -262,6 +270,9 @@ unset NINO_SYSTEM_PROMPT
     -   Note: This flag is compatible only with multimodal models that support image inputs. It can be used multiple times to include multiple images in a single request.
 -   `-url` or `-u` : The host and port where the Ollama server is running (optional).
     -   The default `http://localhost:11434/api/generate` will be used if no URL is passed.
+-   `-format` or `f` : Specifies the format of the response from the model.
+    -   Currently, the only supported value is `json`.
+    -   Note: This flag requires that your prompt explicitly instructs the model to respond in JSON format.
 -   `-output` or `-o`: Specifies the filename where the model output will be saved (optional).
 -   `-no-loading` or `-nl` : Disable the loading animation (optional).
 -   `-silent` or `-s` : Suppresses model output and loading animation (optional).

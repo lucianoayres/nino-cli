@@ -33,18 +33,18 @@ func TestParseArgs(t *testing.T) {
 	}
 
 	tests := []struct {
-		name           string
-		args           []string
-		envModel       string
-		envURL         string
+		name            string
+		args            []string
+		envModel        string
+		envURL          string
 		envSystemPrompt string
-		wantConfig     *Config
-		wantErr        bool
-		wantErrMessage string
+		wantConfig      *Config
+		wantErr         bool
+		wantErrMessage  string
 	}{
 		{
 			name: "Valid arguments with long flags",
-			args: []string{"cmd", "--model=llama3.1", "--prompt=Hello", "--url=http://localhost:11434/api/generate", "--output=result.txt"},
+			args: []string{"cmd", "--model=llama3.1", "--prompt=Hello", "--url=http://localhost:11434/api/generate", "--output=result.txt", "--format=json"},
 			wantConfig: &Config{
 				Model:          "llama3.1",
 				Prompt:         "Hello",
@@ -54,14 +54,15 @@ func TestParseArgs(t *testing.T) {
 				DisableLoading: false,
 				Silent:         false,
 				ImagePaths:     []string{},
+				Format:         "json",
 			},
 			wantErr: false,
 		},
 		{
-			name: "Environment variables including system prompt",
-			args: []string{"cmd", "--prompt=Hello"},
-			envModel: "env_model",
-			envURL:   "http://env-url/api",
+			name:            "Environment variables including system prompt",
+			args:            []string{"cmd", "--prompt=Hello", "--format=json"},
+			envModel:        "env_model",
+			envURL:          "http://env-url/api",
 			envSystemPrompt: "System prompt:",
 			wantConfig: &Config{
 				Model:          "env_model",
@@ -72,6 +73,23 @@ func TestParseArgs(t *testing.T) {
 				DisableLoading: false,
 				Silent:         false,
 				ImagePaths:     []string{},
+				Format:         "json",
+			},
+			wantErr: false,
+		},
+		{
+			name: "Valid arguments with image files",
+			args: []string{"cmd", "--prompt=Hello", "--image", imageFilePath1, "--image", imageFilePath2, "--format=json"},
+			wantConfig: &Config{
+				Model:          "llama3.2",
+				Prompt:         strings.TrimSpace("Hello " + imageFilePath1 + " " + imageFilePath2),
+				PromptFile:     "",
+				URL:            "http://localhost:11434/api/generate",
+				Output:         "",
+				DisableLoading: false,
+				Silent:         false,
+				ImagePaths:     []string{imageFilePath1, imageFilePath2},
+				Format:         "json",
 			},
 			wantErr: false,
 		},
@@ -147,11 +165,6 @@ func TestParseArgs(t *testing.T) {
 					t.Errorf("ParseArgs() unexpected error: %v", err)
 					return
 				}
-			}
-
-			// Concatenate image paths to the prompt if any
-			if len(gotConfig.ImagePaths) > 0 {
-				gotConfig.Prompt = strings.TrimSpace(gotConfig.Prompt + " " + strings.Join(gotConfig.ImagePaths, " "))
 			}
 
 			// Check the obtained config
