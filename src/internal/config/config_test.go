@@ -44,7 +44,7 @@ func TestParseArgs(t *testing.T) {
 	}{
 		{
 			name: "Valid arguments with long flags",
-			args: []string{"cmd", "--model=llama3.1", "--prompt=Hello", "--url=http://localhost:11434/api/generate", "--output=result.txt", "--format=json", "--disable-stream"},
+			args: []string{"cmd", "--model=llama3.1", "--prompt=Hello", "--url=http://localhost:11434/api/generate", "--output=result.txt", "--format=json", "--no-stream"},
 			wantConfig: &Config{
 				Model:          "llama3.1",
 				Prompt:         "Hello",
@@ -81,7 +81,7 @@ func TestParseArgs(t *testing.T) {
 		},
 		{
 			name: "Valid arguments with image files",
-			args: []string{"cmd", "--prompt=Hello", "--image", imageFilePath1, "--image", imageFilePath2, "--format=json", "--disable-stream"},
+			args: []string{"cmd", "--prompt=Hello", "--image", imageFilePath1, "--image", imageFilePath2, "--format=json", "--no-stream"},
 			wantConfig: &Config{
 				Model:          "llama3.2",
 				Prompt:         strings.TrimSpace("Hello " + imageFilePath1 + " " + imageFilePath2),

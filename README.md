@@ -270,7 +270,7 @@ unset NINO_SYSTEM_PROMPT
     -   Note: This flag is compatible only with multimodal models that support image inputs. It can be used multiple times to include multiple images in a single request.
 -   `-url` or `-u` : The host and port where the Ollama server is running (optional).
     -   The default `http://localhost:11434/api/generate` will be used if no URL is passed.
--   `-disable-stream` or `-ds`: Disables streaming mode, displaying the entire response at once instead of progressively showing it on the screen.
+-   `-no-stream` or `-ns`: Disables streaming mode, displaying the entire response at once instead of progressively showing it on the screen.
     -   Note: This may result in a longer wait time before the response is displayed.
 -   `-format` or `-f` : Specifies the format of the response from the model.
     -   Currently, the only supported value is `json`.
@@ -319,6 +319,9 @@ To trigger workflows via the API, you’ll need a GitHub personal access token. 
 -   [x] Launch v1.0
 -   [x] Create GitHub Actions Recipes
 -   [x] Add Multimodal Model Support
+-   [x] Add JSON format Argument
+-   [x] Add Stream Mode Argument
+-   [ ] Add Context Support
 -   [ ] Add Custom Modelfiles
 -   [ ] Add Chat Mode Support
 -   [ ] Add Run With Docker Method
