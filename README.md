@@ -270,13 +270,13 @@ unset NINO_SYSTEM_PROMPT
     -   Note: This flag is compatible only with multimodal models that support image inputs. It can be used multiple times to include multiple images in a single request.
 -   `-url` or `-u` : The host and port where the Ollama server is running (optional).
     -   The default `http://localhost:11434/api/generate` will be used if no URL is passed.
--   `-no-stream` or `-ns`: Disables streaming mode, displaying the entire response at once instead of progressively showing it on the screen.
-    -   Note: This may result in a longer wait time before the response is displayed.
 -   `-format` or `-f` : Specifies the format of the response from the model.
     -   Currently, the only supported value is `json`.
     -   Note: This flag requires that your prompt explicitly instructs the model to respond in JSON format.
 -   `-output` or `-o`: Specifies the filename where the model output will be saved (optional).
 -   `-no-loading` or `-nl` : Disable the loading animation (optional).
+-   `-no-stream` or `-ns`: Disables streaming mode, displaying the entire response at once instead of progressively showing it on the screen.
+    -   Note: This may result in a longer wait time before the response is displayed.
 -   `-silent` or `-s` : Suppresses model output and loading animation (optional).
     -   Requires `-output` flag.
 
