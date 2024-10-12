@@ -1,4 +1,3 @@
-// main.go
 package main
 
 import (
@@ -8,6 +7,7 @@ import (
 	"net/http"
 	"nino/internal/client"
 	"nino/internal/config"
+	"nino/internal/contextmanager"
 	"nino/internal/models"
 	"nino/internal/processor"
 	"nino/internal/utils"
@@ -52,24 +52,16 @@ func main() {
 		Stream: cfg.Stream,
 	}
 
-	// SAVE PAYLOAD FILE TO JSON
-	/*
-	file, err := os.Create("payload.json")
+	// Load context data for the model
+	contextData, err := contextmanager.LoadContext(cfg.Model)
 	if err != nil {
-		log.Fatalf("Error creating payload file: %v", err)
-	}
-	defer file.Close()
-
-	payloadJSON, err := json.MarshalIndent(payload, "", "  ")
-	if err != nil {
-		log.Fatalf("Error marshalling payload to JSON: %v", err)
+		log.Fatalf("Error loading context data: %v", err)
 	}
 
-	if _, err := file.Write(payloadJSON); err != nil {
-		log.Fatalf("Error writing payload to file: %v", err)
+	// If context data exists, include it in the payload
+	if len(contextData) > 0 {
+		payload.Context = contextData
 	}
-	// END OF SAVE PAYLOAD FILE TO JSON
-	*/
 
 	// Start the loading animation in a goroutine if not disabled and not in silent mode
 	done := make(chan bool)
@@ -127,8 +119,13 @@ func main() {
 		fmt.Print("\r\033[K")
 	}
 
+	// Define context handler
+	contextHandler := func(context []int) error {
+		return contextmanager.SaveContext(cfg.Model, context)
+	}
+
 	// Process the response and write to all writers
-	if err := processor.ProcessResponse(response.Body, multiWriter); err != nil {
+	if err := processor.ProcessResponse(response.Body, multiWriter, contextHandler); err != nil {
 		log.Fatalf("Error processing response: %v", err)
 	}
 
