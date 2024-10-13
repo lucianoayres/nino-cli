@@ -286,17 +286,16 @@ unset NINO_SYSTEM_PROMPT
 ## Command-line Flags
 
 -   `-model` or `-m` : The model to use (default: "llama3.2").
-    -   This must match the model that is currently running on Ollama.
+    -   Note: This must match the model that is currently running on Ollama.
 -   `-prompt` or `-p` : The prompt to send to the language model (required unless `-prompt-file` is used).
 -   `-prompt-file` or `-pf` : The path to a text file containing the prompt (optional).
-    -   If both `-prompt` and `-prompt-file` are provided, `-prompt` takes precedence.
+    -   Note: If both `-prompt` and `-prompt-file` are provided, `-prompt` takes precedence.
 -   `-image` or `-i`: Path to local image file to include in the request (optional).
     -   Note: This flag is compatible only with multimodal models that support image inputs. It can be used multiple times to include multiple images in a single request.
 -   `-url` or `-u` : The host and port where the Ollama server is running (optional).
-    -   The default `http://localhost:11434/api/generate` will be used if no URL is passed.
+    -   Note: The default `http://localhost:11434/api/generate` will be used if no URL is passed.
 -   `-format` or `-f` : Specifies the format of the response from the model.
-    -   Currently, the only supported value is `json`.
-    -   Note: This flag requires that your prompt explicitly instructs the model to respond in JSON format.
+    -   Note: Currently, the only supported value is `json`. This flag also requires that your prompt explicitly instructs the model to respond in JSON format.
 -   `-output` or `-o`: Specifies the filename where the model output will be saved (optional).
 -   `-no-loading` or `-nl` : Disable the loading animation (optional).
 -   `-no-stream` or `-ns`: Disables streaming mode, displaying the entire response at once instead of progressively showing it on the screen.
@@ -304,7 +303,7 @@ unset NINO_SYSTEM_PROMPT
 -   `-no-context` or `-nc` : Disable the context from the previous request (optional).
     -   Note: Previous context won't be used for this response, but the new context will be cached.
 -   `-silent` or `-s` : Suppresses model output and loading animation (optional).
-    -   Requires `-output` flag.
+    -   Note: Requires `-output` flag.
 
 ## Makefile
 
