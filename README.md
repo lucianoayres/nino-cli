@@ -345,9 +345,9 @@ To trigger workflows via the API, you’ll need a GitHub personal access token. 
 -   [x] Add Multimodal Model Support
 -   [x] Add JSON format Argument
 -   [x] Add Stream Mode Argument
--   [ ] Add Context Support
+-   [x] Add Context Support
+-   [ ] Increase Test Coverage
 -   [ ] Add Custom Modelfiles
--   [ ] Add Chat Mode Support
 -   [ ] Add Run With Docker Method
 
 ## Acknowledgements
