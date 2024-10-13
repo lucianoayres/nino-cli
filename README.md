@@ -283,26 +283,19 @@ unset NINO_SYSTEM_PROMPT
 
 ## Command-line Flags
 
--   `-model` or `-m` : The model to use (default: "llama3.2").
-    -   This must match the model that is currently running on Ollama.
--   `-prompt` or `-p` : The prompt to send to the language model (required unless `-prompt-file` is used).
--   `-prompt-file` or `-pf` : The path to a text file containing the prompt (optional).
-    -   If both `-prompt` and `-prompt-file` are provided, `-prompt` takes precedence.
--   `-image` or `-i`: Path to local image file to include in the request (optional).
-    -   Note: This flag is compatible only with multimodal models that support image inputs. It can be used multiple times to include multiple images in a single request.
--   `-url` or `-u` : The host and port where the Ollama server is running (optional).
-    -   The default `http://localhost:11434/api/generate` will be used if no URL is passed.
--   `-format` or `-f` : Specifies the format of the response from the model.
-    -   Currently, the only supported value is `json`.
-    -   Note: This flag requires that your prompt explicitly instructs the model to respond in JSON format.
--   `-output` or `-o`: Specifies the filename where the model output will be saved (optional).
--   `-no-loading` or `-nl` : Disable the loading animation (optional).
--   `-no-stream` or `-ns`: Disables streaming mode, displaying the entire response at once instead of progressively showing it on the screen.
-    -   Note: This may result in a longer wait time before the response is displayed.
--   `-no-context` or `-nc` : Disable the context from the previous request (optional).
-    -   Note: Previous context won't be used for this response, but the new context will be cached.
--   `-silent` or `-s` : Suppresses model output and loading animation (optional).
-    -   Requires `-output` flag.
+| Flag            | Short Form | Description                                                                                                                   | Notes                                                                                                                                          |
+| --------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--model`       | `-m`       | The model to use (default: `"llama3.2"`).                                                                                     | Must match the model currently running on Ollama.                                                                                              |
+| `--prompt`      | `-p`       | The prompt to send to the language model (required unless `--prompt-file` is used).                                           |                                                                                                                                                |
+| `--prompt-file` | `-pf`      | Path to a text file containing the prompt (optional).                                                                         | If both `--prompt` and `--prompt-file` are provided, `--prompt` takes precedence.                                                              |
+| `--image`       | `-i`       | Path to a local image file to include in the request (optional).                                                              | Compatible only with multimodal models that support image inputs. Can be used multiple times to include multiple images in a single request.   |
+| `--url`         | `-u`       | The host and port where the Ollama server is running (optional).                                                              | Defaults to `http://localhost:11434/api/generate` if no URL is passed.                                                                         |
+| `--format`      | `-f`       | Specifies the format of the response from the model (optional).                                                               | Currently, the only supported value is `"json"`. This flag requires that your prompt explicitly instructs the model to respond in JSON format. |
+| `--output`      | `-o`       | Specifies the filename where the model output will be saved (optional).                                                       |                                                                                                                                                |
+| `--no-loading`  | `-nl`      | Disables the loading animation (optional).                                                                                    |                                                                                                                                                |
+| `--no-stream`   | `-ns`      | Disables streaming mode, displaying the entire response at once instead of progressively showing it on the screen (optional). | May result in a longer wait time before the response is displayed.                                                                             |
+| `--no-context`  | `-nc`      | Disables using the context from the previous request (optional).                                                              | Previous context won't be used for this response, but the new context will be cached for future use.                                           |
+| `--silent`      | `-s`       | Suppresses model output and loading animation (optional).                                                                     | Requires the `--output` flag to specify where the output will be saved.                                                                        |
 
 ## Makefile
 
