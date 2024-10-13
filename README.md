@@ -14,6 +14,8 @@ Nino enhances the basic interaction provided by Ollama by displaying full model 
 
 🎧 [Listen to the Nino CLI Audio Overview](https://notebooklm.google.com/notebook/43c94b77-3ee3-475d-a2a5-478ae3112068/audio)
 
+file:///home/luciano/Downloads/Nino-CLI-Overview.wav
+
 ## Features
 
 Enhance command-line workflows with Nino CLI:
