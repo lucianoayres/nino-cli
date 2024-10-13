@@ -59,7 +59,7 @@ func main() {
 	}
 
 	// If context data exists, include it in the payload
-	if len(contextData) > 0 {
+	if !cfg.DisableContext && len(contextData) > 0 {
 		payload.Context = contextData
 	}
 

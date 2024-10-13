@@ -17,6 +17,7 @@ Nino enhances the basic interaction provided by Ollama by displaying full model 
 Enhance command-line workflows with Nino CLI:
 
 -   💎 Pipe outputs to the AI for real-time analysis.
+-   💡 Remembers your last interaction for a more conversational experience.
 -   🖼️ Analyze images with multimodal models.
 -   🐶 Pass file contents as arguments.
 -   🤖 Save AI responses to text files.
@@ -219,6 +220,27 @@ You can supress the model output and loading animation and only save the output 
 ./nino -model llama3.2 -prompt "What color models are available in CSS?" -silent -output answer.txt
 ```
 
+## Context History
+
+Nino automatically maintains context between requests for the same model, allowing for more coherent and conversational interactions. To disable context for a particular request, use the `no-context` flag:
+
+```bash
+./nino -model llama3.2 -no-context -prompt "What's the Linux command to list hidden files in a directory?"
+```
+
+Note: The context is limited to the last interaction, not the entire conversation history.
+
+### Reseting Context History
+
+If you wish to reset the context entirely, you can delete the `context.json` file for the specific model. The context files are stored in the following directory:
+
+-   If `XDG_DATA_HOME` is set:
+    -   Context files are located at `$XDG_DATA_HOME/nino/models/MODEL_NAME/context.json`
+-   If `XDG_DATA_HOME` is not set:
+    -   Context files are located at `~/.local/share/nino/models/MODEL_NAME/context.json`
+
+Replace `MODEL_NAME` with the name of the model you're using (e.g., `llama3.2`). Deleting this file will remove the saved context for that model.
+
 ## Using Environment Variables
 
 You can set environment variables to use as defaults for the `-model` and `-url` parameters if they are not passed on the command line. Additionally, you can set a base system prompt to automatically prefix all user prompts.
@@ -277,6 +299,8 @@ unset NINO_SYSTEM_PROMPT
 -   `-no-loading` or `-nl` : Disable the loading animation (optional).
 -   `-no-stream` or `-ns`: Disables streaming mode, displaying the entire response at once instead of progressively showing it on the screen.
     -   Note: This may result in a longer wait time before the response is displayed.
+-   `-no-context` or `-nc` : Disable the context from the previous request (optional).
+    -   Note: Previous context won't be used for this response, but the new context will be cached.
 -   `-silent` or `-s` : Suppresses model output and loading animation (optional).
     -   Requires `-output` flag.
 
