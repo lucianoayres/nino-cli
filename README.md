@@ -19,9 +19,9 @@ Enhance command-line workflows with Nino CLI:
 -   💎 Pipe outputs to the AI for real-time analysis.
 -   💡 Remembers your last interaction for a more conversational experience.
 -   🖼️ Analyze images with multimodal models.
--   🐶 Pass file contents as arguments.
--   🤖 Save AI responses to text files.
+-   🐶 Pass file contents as prompts and save AI responses to text files.
 -   💻 Seamlessly integrate with command-line tools.
+-   🔐 Data never leaves your computer, ensuring privacy.
 
 💖 Best of all, it's completely free, forever!
 
