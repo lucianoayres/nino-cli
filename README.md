@@ -4,7 +4,7 @@
 
 ### Run LLMs from the Command Line (Always Free)
 
-[About](#about-nino) · [Features](#features) · [Practical Examples](#practical-examples) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage](#usage) · [Context History](#context-history) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [GitHub Actions](#github-actions) · [TODOs](#todos) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
+[About](#about-nino) · [What's New?](#whats-new) · [Features](#features) · [Practical Examples](#practical-examples) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage](#usage) · [Context History](#context-history) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [GitHub Actions](#github-actions) · [TODOs](#todos) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
 
 ## About Nino
 
@@ -14,11 +14,33 @@ Nino enhances the basic interaction provided by Ollama by displaying full model 
 
 🎧 [Listen to the Nino CLI Audio Overview](https://notebooklm.google.com/notebook/43c94b77-3ee3-475d-a2a5-478ae3112068/audio)
 
+### What's New?
+
+-   🤗 **Support for Hugging Face GGUF models**: You can now run any GGUF models hosted on Hugging Face using `Nino` with Ollama's infrastructure.
+
+### Example: Running Hugging Face GGUF Models
+
+You can now run Hugging Face models with `nino` by simply providing the repository URL. First pull the model using Ollama:
+
+```bash
+ollama pull hf.co/bartowski/Llama-3.2-1B-Instruct-GGUF
+```
+
+Then use the Hugging Face model with Nino:
+
+```bash
+./nino -m "hf.co/bartowski/Llama-3.2-1B-Instruct-GGUF" -p "Explain me the core concepts of Linear Algebra"
+```
+
+You can now explore a wide range of models and tailor the performance for your needs using **nino**.
+For more advanced customizations, refer to the [Hugging Face and Ollama documentation](https://huggingface.co/docs/hub/ollama).
+
 ## Features
 
 Enhance command-line workflows with Nino CLI:
 
 -   💎 Pipe outputs to the AI for real-time analysis.
+-   🤗 Run any Hugging Face GGUF models
 -   💡 Remembers your last interaction for a more conversational experience.
 -   🖼️ Analyze images with multimodal models.
 -   🐶 Pass file contents as prompts and save AI responses to text files.
@@ -67,21 +89,21 @@ Nino relies on the [Ollama CLI tool](https://github.com/jmorganca/ollama) to int
 
 Follow the instructions on the [Ollama GitHub repository](https://github.com/jmorganca/ollama) to install and set up Ollama. Ensure that Ollama is available in your system’s `$PATH`.
 
+### Pull the Model
+
+To pull the desired model (e.g., `llama3.2`), execute the following command:
+
+```bash
+ollama pull llama3.2
+```
+
 ### Start the Ollama Server
 
-Once Ollama is installed, you need to start the server:
+Once Ollama is installed and the chosen model pulled, you need to start the server. This command will run the Ollama server on `http://localhost:11434/api/generate` (default URL and port):
 
-1. **Start the Ollama Server**: This command will run the Ollama server on `http://localhost:11434/api/generate` (default URL and port).
-
-    ```bash
-    ollama serve
-    ```
-
-2. **Run the Model**: To run the desired model (e.g., `llama3.2`), execute the following command in a separate terminal window:
-
-    ```bash
-    ollama run llama3.2
-    ```
+```bash
+ollama serve
+```
 
 > **Note:** The `-model` parameter in nino **must match** the model that you run on Ollama. For example, if you start `llama3.2` in Ollama, you must pass `llama3.2` as the `-model` in nino. Otherwise, nino will not be able to communicate with the correct model.
 
