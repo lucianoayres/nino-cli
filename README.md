@@ -127,7 +127,7 @@ Ollama should now be running, and nino can interact with it by sending prompts.
 2. Build the project:
 
     ```bash
-    make build
+    make
     ```
 
 ## Usage
