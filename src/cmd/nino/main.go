@@ -50,6 +50,7 @@ func main() {
 		Images: imagesBase64, // Assign the base64-encoded images
 		Format: cfg.Format,
 		Stream: cfg.Stream,
+		Keep_Alive: cfg.Keep_Alive,
 	}
 
 	// Load context data for the model

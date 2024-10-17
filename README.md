@@ -267,41 +267,58 @@ Replace `MODEL_NAME` with the name of the model you're using (e.g., `llama3.2`).
 
 ## Using Environment Variables
 
-You can set environment variables to use as defaults for the `-model` and `-url` parameters if they are not passed on the command line. Additionally, you can set a base system prompt to automatically prefix all user prompts.
+Nino allows you to configure default settings through environment variables. These include the model and URL for requests, a system prompt that automatically prefixes all user prompts, and the keep-alive duration for how long the model stays active after a request. Below are details on how to configure each of these options.
 
-### Setting `NINO_MODEL` and `NINO_URL`
+### 1. Default Model and URL
 
--   Set a default model:
+You can set default values for the model and URL used in requests, so you don't need to pass them every time via the command line.
+
+-   **Set a default model**:
 
     ```bash
     export NINO_MODEL="llama3.2"
     ```
 
--   Set a default URL:
+-   **Set a default URL**:
 
     ```bash
     export NINO_URL="http://localhost:11434/api/generate"
     ```
 
-    When environment variables are set, Nino uses them as defaults. To override these defaults, use the `-model` and `-url` flags at runtime.
+If these environment variables are set, Nino will use them as defaults. You can still override these defaults by passing the `-model` and `-url` flags at runtime.
 
-### Setting `NINO_SYSTEM_PROMPT`
+### 2. Keep-Alive Duration
 
--   Set a default system prompt for all user prompts:
+The `NINO_KEEP_ALIVE` variable controls how long the model stays active after a request before shutting down. By default, this value is **60 minutes** (`60m`).
+
+-   **Set a custom keep-alive duration**:
+
+    ```bash
+    export NINO_KEEP_ALIVE="90m"
+    ```
+
+In this example, the model will remain active for 90 minutes after a request.
+
+### 3. System Prompt
+
+You can set a default system prompt to be automatically added to every user prompt. This is useful for ensuring consistent instructions across all interactions.
+
+-   **Set a default system prompt**:
 
     ```bash
     export NINO_SYSTEM_PROMPT="Do not use markdown in your answer:"
     ```
 
-    The `NINO_SYSTEM_PROMPT` cannot be overridden once set. To reset it, follow the instructions below.
+Once set, this system prompt cannot be overridden in individual prompts. You must clear it to change it.
 
-### Clearing Environment Variables
+### 4. Clearing Environment Variables
 
-To clear an environment variable, use:
+To clear any of the environment variables mentioned above, use:
 
 ```bash
 unset NINO_MODEL
 unset NINO_URL
+unset NINO_KEEP_ALIVE
 unset NINO_SYSTEM_PROMPT
 ```
 

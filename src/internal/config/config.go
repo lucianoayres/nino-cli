@@ -18,6 +18,7 @@ type Config struct {
 	Output         string
 	DisableLoading bool
 	Stream         bool
+	Keep_Alive	   string
 	DisableContext bool
 	Silent         bool
 	ImagePaths     []string // New field for image paths
@@ -47,6 +48,11 @@ func ParseArgs() (*Config, error) {
 	defaultURL := os.Getenv("NINO_URL")
 	if defaultURL == "" {
 		defaultURL = "http://localhost:11434/api/generate" // Fallback default
+	}
+
+	defaultKeepAlive := os.Getenv("NINO_KEEP_ALIVE")
+	if defaultKeepAlive == "" {
+		defaultKeepAlive = "60m" // Keep Model Alive time in minutes
 	}
 
 	systemPrompt := os.Getenv("NINO_SYSTEM_PROMPT")
@@ -136,6 +142,7 @@ func ParseArgs() (*Config, error) {
 		Output:         *outputPtr,
 		DisableLoading: *disableLoadingPtr,
 		Stream:         !*disableStreamPtr,
+		Keep_Alive:     defaultKeepAlive,
 		DisableContext: *disableLoadingPtr,
 		Silent:         *silentPtr,
 		ImagePaths:     imagePaths, // Assign the collected image paths

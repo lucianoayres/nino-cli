@@ -16,5 +16,6 @@ type RequestPayload struct {
 	Images  []string `json:"images"` // New field for images in base64
 	Format  string   `json:"format"`
 	Stream  bool     `json:"stream"`
+	Keep_Alive  string `json:"keep_alive,omitempty"`
 	Context []int    `json:"context,omitempty"`
 }

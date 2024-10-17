@@ -38,6 +38,7 @@ func TestParseArgs(t *testing.T) {
 		envModel        string
 		envURL          string
 		envSystemPrompt string
+		envKeepAlive    string
 		wantConfig      *Config
 		wantErr         bool
 		wantErrMessage  string
@@ -56,6 +57,7 @@ func TestParseArgs(t *testing.T) {
 				ImagePaths:     []string{},
 				Format:         "json",
 				Stream:         false,
+				Keep_Alive:     "60m",
 			},
 			wantErr: false,
 		},
@@ -65,6 +67,7 @@ func TestParseArgs(t *testing.T) {
 			envModel:        "env_model",
 			envURL:          "http://env-url/api",
 			envSystemPrompt: "System prompt:",
+			envKeepAlive:    "30m",
 			wantConfig: &Config{
 				Model:          "env_model",
 				Prompt:         strings.TrimSpace("System prompt: Hello"),
@@ -76,6 +79,7 @@ func TestParseArgs(t *testing.T) {
 				ImagePaths:     []string{},
 				Format:         "json",
 				Stream:         true,
+				Keep_Alive:     "30m",
 			},
 			wantErr: false,
 		},
@@ -93,6 +97,7 @@ func TestParseArgs(t *testing.T) {
 				ImagePaths:     []string{imageFilePath1, imageFilePath2},
 				Format:         "json",
 				Stream:         false,
+				Keep_Alive:     "60m",
 			},
 			wantErr: false,
 		},
@@ -105,6 +110,7 @@ func TestParseArgs(t *testing.T) {
 			origEnvModel := os.Getenv("NINO_MODEL")
 			origEnvURL := os.Getenv("NINO_URL")
 			origEnvSystemPrompt := os.Getenv("NINO_SYSTEM_PROMPT")
+			origEnvKeepAlive := os.Getenv("NINO_KEEP_ALIVE")
 			origFlagCommandLine := flag.CommandLine
 
 			defer func() {
@@ -123,6 +129,11 @@ func TestParseArgs(t *testing.T) {
 					os.Setenv("NINO_SYSTEM_PROMPT", origEnvSystemPrompt)
 				} else {
 					os.Unsetenv("NINO_SYSTEM_PROMPT")
+				}
+				if origEnvKeepAlive != "" {
+					os.Setenv("NINO_KEEP_ALIVE", origEnvKeepAlive)
+				} else {
+					os.Unsetenv("NINO_KEEP_ALIVE")
 				}
 				flag.CommandLine = origFlagCommandLine
 			}()
@@ -152,6 +163,11 @@ func TestParseArgs(t *testing.T) {
 				os.Setenv("NINO_SYSTEM_PROMPT", tt.envSystemPrompt)
 			} else {
 				os.Unsetenv("NINO_SYSTEM_PROMPT")
+			}
+			if tt.envKeepAlive != "" {
+				os.Setenv("NINO_KEEP_ALIVE", tt.envKeepAlive)
+			} else {
+				os.Unsetenv("NINO_KEEP_ALIVE")
 			}
 
 			// Parse the arguments
