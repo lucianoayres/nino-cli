@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"testing"
 
-	"nino/internal/models"
+	"github.com/lucianoayres/nino-cli/internal/models"
 )
 
 // mockRoundTripper is a custom RoundTripper for mocking HTTP responses.

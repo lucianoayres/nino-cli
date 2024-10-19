@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"nino/internal/models"
+
+	"github.com/lucianoayres/nino-cli/internal/models"
 )
 
 // ProcessResponse reads and processes the response from the server

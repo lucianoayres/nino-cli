@@ -5,14 +5,15 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"nino/internal/client"
-	"nino/internal/config"
-	"nino/internal/contextmanager"
-	"nino/internal/models"
-	"nino/internal/processor"
-	"nino/internal/utils"
 	"os"
 	"path/filepath"
+
+	"github.com/lucianoayres/nino-cli/internal/client"
+	"github.com/lucianoayres/nino-cli/internal/config"
+	"github.com/lucianoayres/nino-cli/internal/contextmanager"
+	"github.com/lucianoayres/nino-cli/internal/models"
+	"github.com/lucianoayres/nino-cli/internal/processor"
+	"github.com/lucianoayres/nino-cli/internal/utils"
 )
 
 func main() {

@@ -5,7 +5,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
-	"nino/internal/models"
+
+	"github.com/lucianoayres/nino-cli/internal/models"
 )
 
 // HTTPClient represents a client for making HTTP requests.

@@ -28,5 +28,11 @@ go.work.sum
 # files in the DEV_NOTES folder
 /DEV_NOTES
 
+# files in modelfiles
+/modelfiles
+
+# files in prompts labs
+/prompts_lab
+
 #binary
 /nino

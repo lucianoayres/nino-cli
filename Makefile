@@ -2,6 +2,7 @@
 BINARY_NAME := nino
 BUILD_DIR := ./src/cmd/nino
 TEST_DIR := src
+CONTEXT_CACHE_DIR := ~/.local/share/nino
 DEFAULT_MODEL := "llama3.2"
 WARNING_MESSAGE := "Warning: Ollama not detected. Please run 'make install-deps' to install it."
 
@@ -63,6 +64,14 @@ clean:
 	@echo "Cleaning up binaries and coverage reports..."
 	rm -f $(BINARY_NAME)
 	(cd ./$(TEST_DIR) && rm -f coverage.out coverage.html)
+	$(MAKE) clean-context-cache
+	@echo "Cleanup complete."
+
+# Clean up the context cache
+.PHONY: clean-context-cache
+clean-context-cache:
+	@echo "Cleaning up context cache..."
+	rm -rf $(CONTEXT_CACHE_DIR)
 	@echo "Cleanup complete."
 
 # Clean only coverage files
