@@ -38,6 +38,13 @@ jobs:
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # Ensure full history for tagging
+
+            - name: Set Git identity
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
 
             - name: Generate version tag
               id: generate_tag
@@ -45,13 +52,10 @@ jobs:
                   version=$(date +"%Y.%m.%d.%H%M%S")
                   echo "tag=v$version" >> $GITHUB_ENV
 
-            - name: Create Git Tag
-              uses: EndBug/create-tag-action@v1
-              with:
-                  tag: ${{ env.tag }}
-                  message: "Release version ${{ env.tag }}"
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Create Git tag
+              run: |
+                  git tag -a "${{ env.tag }}" -m "Release version ${{ env.tag }}"
+                  git push origin "${{ env.tag }}"
 
     release:
         needs: git-tagging
@@ -68,6 +72,7 @@ jobs:
             - name: Generate release notes
               id: generate_notes
               run: |
+                  # Option 1: Simple commit message
                   notes="Changes in this Release:\n"
                   notes+=$(git log -1 --pretty=format:"%s")
                   echo "body=$notes" >> $GITHUB_ENV
