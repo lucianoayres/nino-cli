@@ -34,6 +34,9 @@ jobs:
               run: |
                   make build
 
+            - name: Set executable permissions
+              run: chmod +x ./nino
+
             - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
@@ -86,17 +89,15 @@ jobs:
                   notes+=$(git log -1 --pretty=format:"%s")
                   echo "body=$notes" >> $GITHUB_OUTPUT
 
-            - name: Create release
-              id: create_release
-              uses: actions/create-release@v1.1.0
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by Actions
+            - name: Create Release and Upload Asset
+              uses: softprops/action-gh-release@v1
               with:
                   tag_name: "${{ needs.git-tagging.outputs.tag }}"
-                  release_name: "Release ${{ needs.git-tagging.outputs.tag }}"
+                  name: "Release ${{ needs.git-tagging.outputs.tag }}"
                   body: "${{ steps.generate_notes.outputs.body }}"
-                  draft: false
-                  prerelease: false
+                  files: ./nino
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Cleanup release notes
               run: rm -f release_notes.md
