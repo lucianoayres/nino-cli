@@ -22,6 +22,14 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
+            - name: Cache Build Dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ~/.cache
+                  key: ${{ runner.os }}-build-${{ hashFiles('**/Makefile') }}
+                  restore-keys: |
+                      ${{ runner.os }}-build-
+
             - name: Build and package the binary
               run: |
                   make build
@@ -35,6 +43,8 @@ jobs:
     git-tagging:
         needs: build
         runs-on: ubuntu-latest
+        outputs:
+            tag: ${{ steps.generate_tag.outputs.tag }}
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -50,12 +60,12 @@ jobs:
               id: generate_tag
               run: |
                   version=$(date +"%Y.%m.%d.%H%M%S")
-                  echo "tag=v$version" >> $GITHUB_ENV
+                  echo "tag=v$version" >> $GITHUB_OUTPUT
 
             - name: Create Git tag
               run: |
-                  git tag -a "${{ env.tag }}" -m "Release version ${{ env.tag }}"
-                  git push origin "${{ env.tag }}"
+                  git tag -a "${{ steps.generate_tag.outputs.tag }}" -m "Release version ${{ steps.generate_tag.outputs.tag }}"
+                  git push origin "${{ steps.generate_tag.outputs.tag }}"
 
     release:
         needs: git-tagging
@@ -72,10 +82,9 @@ jobs:
             - name: Generate release notes
               id: generate_notes
               run: |
-                  # Option 1: Simple commit message
                   notes="Changes in this Release:\n"
                   notes+=$(git log -1 --pretty=format:"%s")
-                  echo "body=$notes" >> $GITHUB_ENV
+                  echo "body=$notes" >> $GITHUB_OUTPUT
 
             - name: Create release
               id: create_release
@@ -83,8 +92,11 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by Actions
               with:
-                  tag_name: "${{ env.tag }}"
-                  release_name: "Release ${{ env.tag }}"
-                  body: "${{ env.body }}"
+                  tag_name: "${{ needs.git-tagging.outputs.tag }}"
+                  release_name: "Release ${{ needs.git-tagging.outputs.tag }}"
+                  body: "${{ steps.generate_notes.outputs.body }}"
                   draft: false
                   prerelease: false
+
+            - name: Cleanup release notes
+              run: rm -f release_notes.md
