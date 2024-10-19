@@ -45,7 +45,7 @@ Enhance command-line workflows with Nino CLI:
 -   🖼️ Analyze images with multimodal models.
 -   🐶 Pass file contents as prompts and save AI responses to text files.
 -   💻 Seamlessly integrate with command-line tools.
--   🔐 Data never leaves your computer, ensuring privacy.
+-   🔒 Data never leaves your computer, ensuring privacy.
 
 💖 Best of all, it's completely free, forever!
 
@@ -116,6 +116,24 @@ Ollama should now be running, and nino can interact with it by sending prompts.
 -   Ensure that the Ollama server is running via `ollama serve`
 
 ## Installation
+
+### Method 1: Download the Binary from GitHub Releases
+
+1. Download the `nino` binary from the [GitHub release page](https://github.com/lucianoayres/nino-cli/releases).
+
+2. Add execution permission:
+
+    ```bash
+    chmod +x ./nino
+    ```
+
+3. Optionally, move the binary to your local binary folder to make it accessible from anywhere:
+
+    ```bash
+    sudo mv ./nino /usr/local/bin/
+    ```
+
+### Method 2: Clone and Build from Source
 
 1. Clone this repository:
 
@@ -238,7 +256,7 @@ Use the `-no-loading` flag to disable the loading animation for a cleaner output
 
 ### Using Silent Mode
 
-You can supress the model output and loading animation and only save the output to a file:
+You can suppress the model output and loading animation and only save the output to a file:
 
 ```bash
 ./nino -model llama3.2 -prompt "What color models are available in CSS?" -silent -output answer.txt
