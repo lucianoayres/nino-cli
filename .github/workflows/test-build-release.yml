@@ -51,9 +51,11 @@ jobs:
                   echo "::set-output name=tag::$version"
 
             - name: Create Git tag
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                   git tag -a "v${{ steps.generate_tag.outputs.tag }}" -m "Release version v${{ steps.generate_tag.outputs.tag }}"
-                  git push origin "v${{ steps.generate_tag.outputs.tag }}"
+                  git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git "v${{ steps.generate_tag.outputs.tag }}"
 
     release:
         needs: git-tagging
