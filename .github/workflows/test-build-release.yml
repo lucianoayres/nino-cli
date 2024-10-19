@@ -39,6 +39,11 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
+            - name: Set Git identity
+              run: |
+                  git config --global user.name 'github-actions[bot]'
+                  git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
             - name: Generate version tag
               id: generate_tag
               run: |
