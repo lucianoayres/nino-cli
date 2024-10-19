@@ -1,0 +1,82 @@
+name: Release
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Run tests
+              run: make test
+
+    build:
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Build and package the binary
+              run: |
+                  make build
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ${{ runner.os }}-binary
+                  path: nino
+
+    git-tagging:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Generate version tag
+              id: generate_tag
+              run: |
+                  version=$(date +"%Y.%m.%d.%H%M%S")
+                  echo "::set-output name=tag::$version"
+
+            - name: Create Git tag
+              run: |
+                  git tag -a "v${{ steps.generate_tag.outputs.tag }}" -m "Release version v${{ steps.generate_tag.outputs.tag }}"
+                  git push origin "v${{ steps.generate_tag.outputs.tag }}"
+
+    release:
+        needs: git-tagging
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Download artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: ${{ runner.os }}-binary
+
+            - name: Generate release notes
+              id: generate_notes
+              run: |
+                  notes="Changes in this Release:\n"
+                  notes+=$(git log -1 --pretty=format:"%s")
+                  echo "::set-output name=body::$notes"
+
+            - name: Create release
+              id: create_release
+              uses: actions/create-release@v1.1.0
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by Actions
+              with:
+                  tag_name: "v${{ needs.git-tagging.outputs.tag }}"
+                  release_name: "Release v${{ needs.git-tagging.outputs.tag }}"
+                  body: "${{ steps.generate_notes.outputs.body }}"
+                  draft: false
+                  prerelease: false
