@@ -48,14 +48,14 @@ jobs:
               id: generate_tag
               run: |
                   version=$(date +"%Y.%m.%d.%H%M%S")
-                  echo "::set-output name=tag::$version"
+                  echo "tag=$version" >> $GITHUB_ENV
 
             - name: Create Git tag
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  git tag -a "v${{ steps.generate_tag.outputs.tag }}" -m "Release version v${{ steps.generate_tag.outputs.tag }}"
-                  git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git "v${{ steps.generate_tag.outputs.tag }}"
+                  git tag -a "v${{ env.tag }}" -m "Release version v${{ env.tag }}"
+                  git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git "v${{ env.tag }}"
 
     release:
         needs: git-tagging
@@ -74,7 +74,7 @@ jobs:
               run: |
                   notes="Changes in this Release:\n"
                   notes+=$(git log -1 --pretty=format:"%s")
-                  echo "::set-output name=body::$notes"
+                  echo "body=$notes" >> $GITHUB_ENV
 
             - name: Create release
               id: create_release
@@ -82,8 +82,8 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by Actions
               with:
-                  tag_name: "v${{ needs.git-tagging.outputs.tag }}"
-                  release_name: "Release v${{ needs.git-tagging.outputs.tag }}"
-                  body: "${{ steps.generate_notes.outputs.body }}"
+                  tag_name: "v${{ env.tag }}"
+                  release_name: "Release v${{ env.tag }}"
+                  body: "${{ env.body }}"
                   draft: false
                   prerelease: false
