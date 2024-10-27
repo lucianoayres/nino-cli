@@ -25,14 +25,8 @@ go.work.sum
 # env file
 .env
 
-# files in the DEV_NOTES folder
-/DEV_NOTES
-
-# files in modelfiles
-/modelfiles
-
-# files in prompts labs
-/prompts_lab
+# files in labs
+/labs
 
 #binary
 /nino
