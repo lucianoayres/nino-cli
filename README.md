@@ -264,6 +264,8 @@ You can suppress the model output and loading animation and only save the output
 
 ## Context History
 
+### ⚠️ Feature temporariry disabled due to performance issues
+
 Nino automatically maintains context between requests for the same model, allowing for more coherent and conversational interactions. To disable context for a particular request, use the `no-context` flag:
 
 ```bash
