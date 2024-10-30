@@ -143,7 +143,7 @@ func ParseArgs() (*Config, error) {
 		DisableLoading: *disableLoadingPtr,
 		Stream:         !*disableStreamPtr,
 		Keep_Alive:     defaultKeepAlive,
-		DisableContext: *disableLoadingPtr,
+		DisableContext: *disableContextPtr,
 		Silent:         *silentPtr,
 		ImagePaths:     imagePaths, // Assign the collected image paths
 		Format:         *formatPtr,
