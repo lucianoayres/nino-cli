@@ -404,6 +404,7 @@ To trigger workflows via the API, you’ll need a GitHub personal access token. 
 -   [x] Add JSON format Argument
 -   [x] Add Stream Mode Argument
 -   [x] Add Context Support
+-   [ ] Fix the Performance Issue with Context Data Loading
 -   [ ] Increase Test Coverage
 -   [ ] Add Custom Modelfiles
 -   [ ] Add Run With Docker Method

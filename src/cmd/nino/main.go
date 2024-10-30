@@ -36,6 +36,7 @@ func main() {
 	cli := client.NewHTTPClient(cfg.URL)
 
 	// Read and encode images
+	
 	var imagesBase64 []string
 	if len(cfg.ImagePaths) > 0 {
 		imagesBase64, err = utils.ReadImagesAsBase64(cfg.ImagePaths)
@@ -54,17 +55,23 @@ func main() {
 		Keep_Alive: cfg.Keep_Alive,
 	}
 
+	// TODO: Fix the performance for context data 
+	// Justification: It's slowing down the application performance
+
+	/*
 	// Load context data for the model
 	contextData, err := contextmanager.LoadContext(cfg.Model)
 	if err != nil {
 		log.Fatalf("Error loading context data: %v", err)
 	}
 
+	
 	// If context data exists, include it in the payload
 	if !cfg.DisableContext && len(contextData) > 0 {
 		payload.Context = contextData
 	}
-
+	*/
+	
 	// Start the loading animation in a goroutine if not disabled and not in silent mode
 	done := make(chan bool)
 	if !cfg.DisableLoading && !cfg.Silent {
