@@ -1,15 +1,18 @@
-// contextmanager_test.go
-
 package contextmanager
 
 import (
 	"os"
 	"reflect"
 	"testing"
+
+	"github.com/lucianoayres/nino-cli/internal/logger"
 )
 
 // TestSaveAndLoadContext tests the SaveContext and LoadContext functions.
 func TestSaveAndLoadContext(t *testing.T) {
+	// Initialize logger for tests
+	logger.GetLogger(true)
+
 	// Create a temporary directory to act as XDG_DATA_HOME
 	tmpDir, err := os.MkdirTemp("", "nino_test")
 	if err != nil {
@@ -60,6 +63,9 @@ func TestSaveAndLoadContext(t *testing.T) {
 
 // TestLoadContextNoFile tests that LoadContext returns nil when the context file does not exist.
 func TestLoadContextNoFile(t *testing.T) {
+	// Initialize logger for tests
+	logger.GetLogger(true)
+
 	// Create a temporary directory to act as XDG_DATA_HOME
 	tmpDir, err := os.MkdirTemp("", "nino_test")
 	if err != nil {

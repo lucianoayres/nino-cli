@@ -5,9 +5,14 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/lucianoayres/nino-cli/internal/logger"
 )
 
 func TestReadImagesAsBase64(t *testing.T) {
+	// Initialize logger for tests
+	logger.GetLogger(true)
+
 	t.Run("Valid image files", func(t *testing.T) {
 		// Create a temporary directory
 		tempDir := t.TempDir()

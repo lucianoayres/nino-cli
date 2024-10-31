@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"errors"
 	"testing"
+
+	"github.com/lucianoayres/nino-cli/internal/logger"
 )
 
 // Helper function to compare two slices of integers
@@ -21,6 +23,9 @@ func slicesEqual(a, b []int) bool {
 
 // TestProcessResponse tests the ProcessResponse function with various input scenarios.
 func TestProcessResponse(t *testing.T) {
+	// Initialize logger for tests
+	logger.GetLogger(true)
+
 	tests := []struct {
 		name                string
 		input               string
@@ -46,8 +51,8 @@ func TestProcessResponse(t *testing.T) {
 			expectedContext: []int{4, 5, 6},
 		},
 		{
-			name: "Malformed JSON input",
-			input: `{"Response": "Hello", "Done": false}
+			name:    "Malformed JSON input",
+			input:   `{"Response": "Hello", "Done": false}
 {"Response": "World", "Done": true`,
 			wantOutput: "",
 			wantErr:    true,

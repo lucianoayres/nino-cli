@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/lucianoayres/nino-cli/internal/logger"
 	"github.com/lucianoayres/nino-cli/internal/models"
 )
 
@@ -25,6 +26,9 @@ func (m *mockRoundTripper) RoundTrip(req *http.Request) (*http.Response, error) 
 
 // TestHTTPClient_SendRequest tests the SendRequest method of the HTTPClient.
 func TestHTTPClient_SendRequest(t *testing.T) {
+	// Initialize logger for tests
+	logger.GetLogger(true)
+
 	// Define a sample RequestPayload for testing
 	samplePayload := models.RequestPayload{
 		// Populate with appropriate fields based on your actual RequestPayload struct
@@ -38,6 +42,7 @@ func TestHTTPClient_SendRequest(t *testing.T) {
 		return &HTTPClient{
 			BaseURL:    "http://mocked-url.com",
 			HTTPClient: &http.Client{Transport: rt},
+			log:        logger.GetLogger(true),
 		}
 	}
 
@@ -158,6 +163,7 @@ func TestHTTPClient_SendRequest(t *testing.T) {
 				client = &HTTPClient{
 					BaseURL:    "http://[::1]:NamedPort", // Invalid URL to trigger error
 					HTTPClient: &http.Client{},
+					log:        logger.GetLogger(true),
 				}
 			} else if tt.name == "JSON marshaling error" {
 				// To simulate JSON marshaling error, we'll inject a mocked HTTP client
@@ -257,6 +263,9 @@ func TestHTTPClient_SendRequest(t *testing.T) {
 func TestNewHTTPClient(t *testing.T) {
 	t.Parallel() // Run in parallel with other tests
 
+	// Initialize logger for tests
+	logger.GetLogger(true)
+
 	baseURL := "http://example.com/api"
 	client := NewHTTPClient(baseURL)
 
@@ -278,6 +287,9 @@ func TestNewHTTPClient(t *testing.T) {
 func TestHTTPClient_SendRequest_InvalidURL(t *testing.T) {
 	t.Parallel() // Run in parallel with other tests
 
+	// Initialize logger for tests
+	logger.GetLogger(true)
+
 	client := NewHTTPClient("http://[::1]:NamedPort") // Invalid URL
 
 	payload := models.RequestPayload{
@@ -297,6 +309,9 @@ func TestHTTPClient_SendRequest_InvalidURL(t *testing.T) {
 func TestHTTPClient_SendRequest_NetworkError(t *testing.T) {
 	t.Parallel() // Run in parallel with other tests
 
+	// Initialize logger for tests
+	logger.GetLogger(true)
+
 	// Simulate a network error by using a RoundTripper that always returns a network error
 	client := &HTTPClient{
 		BaseURL: "http://mocked-url.com",
@@ -306,6 +321,7 @@ func TestHTTPClient_SendRequest_NetworkError(t *testing.T) {
 				mockError:    &net.OpError{Op: "dial", Net: "tcp", Addr: nil, Err: errors.New("simulated network error")},
 			},
 		},
+		log: logger.GetLogger(true),
 	}
 
 	payload := models.RequestPayload{

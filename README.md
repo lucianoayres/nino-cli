@@ -81,6 +81,16 @@ Discover how to enhance Nino CLI's functionality with optional arguments.
 
 ![nino-cli-screenshot-optional-arguments](https://github.com/user-attachments/assets/f774cc0f-47e5-4579-8efb-9fbb86b2d682)
 
+### Example 4: Enabling Verbose Mode
+
+Use the `-verbose` or `-v` flag to enable detailed logging for debugging and performance validation:
+
+```bash
+./nino -m llama3.2 -p "Explain the concept of chemical equilibrium." -verbose
+```
+
+This will display detailed logs of the request payload, response status, and operation timings, aiding in troubleshooting and performance assessment.
+
 ## Ollama Dependency
 
 Nino relies on the [Ollama CLI tool](https://github.com/jmorganca/ollama) to interact with local language models. Ollama must be installed and running on your machine or server for nino to function properly.
@@ -262,6 +272,16 @@ You can suppress the model output and loading animation and only save the output
 ./nino -model llama3.2 -prompt "What color models are available in CSS?" -silent -output answer.txt
 ```
 
+### Enabling Verbose Mode
+
+Use the `-verbose` or `-v` flag to enable detailed logging for debugging and performance validation:
+
+```bash
+./nino -model llama3.2 -prompt "Explain the concept of chemical equilibrium." -verbose
+```
+
+This will display detailed logs of the request payload, response status, and operation timings, aiding in troubleshooting and performance assessment.
+
 ## Context History
 
 ### ⚠️ Feature temporariry disabled due to performance issues
@@ -363,6 +383,8 @@ unset NINO_SYSTEM_PROMPT
     -   Note: Previous context won't be used for this response, but the new context will be cached.
 -   `-silent` or `-s` : Suppresses model output and loading animation (optional).
     -   Note: Requires `-output` flag.
+-   `-verbose` or `-v` : Enables verbose logging for debugging and performance validation (optional).
+    -   Note: When enabled, detailed logs including request payloads and operation timings are displayed to aid in troubleshooting and performance assessment.
 
 ## Makefile
 
@@ -405,7 +427,7 @@ To trigger workflows via the API, you’ll need a GitHub personal access token. 
 -   [x] Add Multimodal Model Support
 -   [x] Add JSON format Argument
 -   [x] Add Stream Mode Argument
--   [x] Add Context Support
+-   [ ] Add Context Support
 -   [ ] Fix the Performance Issue with Context Data Loading
 -   [ ] Increase Test Coverage
 -   [ ] Add Custom Modelfiles

@@ -11,11 +11,11 @@ type ResponsePayload struct {
 
 // RequestPayload represents the payload sent in the HTTP request.
 type RequestPayload struct {
-	Model   string   `json:"model"`
-	Prompt  string   `json:"prompt"`
-	Images  []string `json:"images"` // New field for images in base64
-	Format  string   `json:"format"`
-	Stream  bool     `json:"stream"`
-	Keep_Alive  string `json:"keep_alive,omitempty"`
-	Context []int    `json:"context,omitempty"`
+	Model      string   `json:"model"`
+	Prompt     string   `json:"prompt"`
+	Images     []string `json:"images"` // New field for images in base64
+	Format     string   `json:"format"`
+	Stream     bool     `json:"stream"`
+	Keep_Alive string   `json:"keep_alive,omitempty"`
+	Context    []int    `json:"context,omitempty"`
 }

@@ -1,17 +1,21 @@
-// internal/utils/server_check_test.go
 package utils
 
 import (
 	"net"
 	"testing"
+
+	"github.com/lucianoayres/nino-cli/internal/logger"
 )
 
 func TestIsOllamaRunning(t *testing.T) {
+	// Initialize logger for tests
+	logger.GetLogger(true)
+
 	tests := []struct {
-		name     string
-		urlStr   string
-		want     bool
-		setup    func() func()
+		name   string
+		urlStr string
+		want   bool
+		setup  func() func()
 	}{
 		{
 			name:   "Valid URL with running server",

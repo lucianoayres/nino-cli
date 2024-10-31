@@ -1,4 +1,3 @@
-// config/config.go
 package config
 
 import (
@@ -18,11 +17,12 @@ type Config struct {
 	Output         string
 	DisableLoading bool
 	Stream         bool
-	Keep_Alive	   string
+	Keep_Alive     string
 	DisableContext bool
 	Silent         bool
 	ImagePaths     []string // New field for image paths
 	Format         string
+	Verbose        bool     // New field for verbose logging
 }
 
 // arrayFlags is a custom type for parsing multiple -image flags
@@ -87,6 +87,10 @@ func ParseArgs() (*Config, error) {
 	flag.Var(&imagePaths, "image", "Paths to local image files (can be specified multiple times)")
 	flag.Var(&imagePaths, "i", "Paths to local image files (short form)")
 
+	// Define the new -verbose and -v flags
+	verbosePtr := flag.Bool("verbose", false, "Enable verbose logging for debugging and performance validation")
+	flag.BoolVar(verbosePtr, "v", false, "Enable verbose logging (shorthand)")
+
 	// Customize the usage message (optional)
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
@@ -133,7 +137,7 @@ func ParseArgs() (*Config, error) {
 		*promptPtr = strings.TrimSpace(*promptPtr + " " + strings.Join(imagePaths, " "))
 	}
 
-	// Return the Config struct with all fields populated
+	// Return the Config struct with all fields populated, including Verbose
 	return &Config{
 		Model:          *modelPtr,
 		Prompt:         *promptPtr,
@@ -147,5 +151,6 @@ func ParseArgs() (*Config, error) {
 		Silent:         *silentPtr,
 		ImagePaths:     imagePaths, // Assign the collected image paths
 		Format:         *formatPtr,
+		Verbose:        *verbosePtr, // Assign the Verbose flag
 	}, nil
 }
