@@ -1,8 +1,8 @@
-# nino CLI
+# 🐾 nino CLI
 
 ![nino-banner-github](https://github.com/user-attachments/assets/4a2c91af-e212-46f9-9f07-e68ca42d65f7)
 
-### Run LLMs from the Command Line (Always Free)
+## Run LLMs from the Command Line (Always Free)
 
 [About](#about-nino) · [What's New?](#whats-new) · [Features](#features) · [Practical Examples](#practical-examples) · [Ollama Dependency](#ollama-dependency) · [Requirements](#requirements) · [Installation](#installation) · [Usage](#usage) · [Context History](#context-history) · [Using Env Vars](#using-environment-variables) · [Command-line Flags](#command-line-flags) · [Makefile](#makefile-usage) · [GitHub Actions](#github-actions) · [TODOs](#todos) · [Acknowledgements](#acknowledgements) · [License](#license) · [Contribution](#contribution)
 
@@ -432,6 +432,10 @@ To trigger workflows via the API, you’ll need a GitHub personal access token. 
 -   [ ] Increase Test Coverage
 -   [ ] Add Custom Modelfiles
 -   [ ] Add Run With Docker Method
+
+### 🦖 Create Custom AI Models with Modelzilla
+
+Looking to build your own AI models? Use [**Modelzilla**](https://github.com/lucianoayres/modelzilla) 🦖 to effortlessly generate customized Modelfiles.
 
 ## Acknowledgements
 
